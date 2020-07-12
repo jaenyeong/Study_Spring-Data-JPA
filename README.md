@@ -185,3 +185,20 @@ https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81-%EB%8D%B0%EC%9D%B4%E
 * hibernate ddl-auto 설정
   * update 설정시 이미 컬럼이 생성된 경우에는 unique, nullable 등 속성이나 데이터 타입을 변경하여도 적용되지 않음
 
+#### Value type mapping
+* Entity 타입과 Value 타입 구분
+  * 식별자가 있어야 하는가
+  * 독립적으로 존재해야 하는가
+
+* Value 타입 종류
+  * 기본 타입 (String, Date, Boolean, ...), 기본 타입의 컬렉션
+  * Composite Value 타입, Composite 타입의 컬렉션
+  * Collection Value 타입
+
+* Composite Value 타입 맵핑
+  * @Embeddable - 클래스 선언 시 태깅
+  * @Embedded - 사용하는 클래스에서 사용시 태깅
+  * @AttributeOverrides
+  * @AttributeOverride
+    * Address의 street 필드를 home_street 이라는 컬럼명으로 사용
+    * @AttributeOverride(name = "street", column = @Column(name = "home_street"))

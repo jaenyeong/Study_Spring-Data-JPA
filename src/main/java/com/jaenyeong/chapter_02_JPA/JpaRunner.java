@@ -21,7 +21,7 @@ public class JpaRunner implements ApplicationRunner {
 //	@Transactional
 	public void run(ApplicationArguments args) throws Exception {
 		Account account = new Account();
-		account.setName("noah2");
+		account.setName("jaenyeong");
 		account.setPassword("jpa");
 
 //		entityManager.persist(account);
