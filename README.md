@@ -121,3 +121,67 @@ https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81-%EB%8D%B0%EC%9D%B4%E
 * 경고 제거
   * Method org.postgresql.jdbc.PgConnection.createClob() is not yet implemented.
   * 설정 : spring.jpa.properties.hibernate.jdbc.lob.non_contextual_creation= true
+
+#### Entity type mapping
+* javax.persistence 패키지
+
+* @Entity
+  * 엔티티는 객체 세상에서 부르는 이름
+  * 보통 클래스와 같은 이름을 사용하기 때문에 값을 변경하지 않음
+  * 엔티티의 이름은 JQL에서 쓰임
+  * name 속성으로 설정하는 것은 하이버네이트 안에서의 이름일뿐
+    * 실제 테이블명도 name 속성값과 동일 (name="myAccount") 설정시 my_account 테이블 생성
+    * 잘못된 설명인지, 추가 설정이 필요한지 확인 필요
+  * @Table이 태깅되어 있는것과 동일
+
+* @Table
+  * 릴레이션 세상에서 부르는 이름
+  * @Entity의 이름이 기본값
+  * 테이블의 이름은 SQL에서 쓰임
+  * 데이터베이스의 예약어(키워드)로 잡혀 있는 단어를 클래스명으로 사용하지 않아야 함
+    * 사용할 경우 데이터베이스 syntax 에러 발생
+
+* @Id
+  * 엔티티의 주키를 맵핑할 때 사용
+  * 자바의 모든 프리미티브 타입과 그 래퍼 타입을 사용할 수 있음
+    * int, long과 같은 프리미티브 타입은 초깃값이 0, 실제 데이터에서 키 값이 0인 경우와 혼동될 수 있음
+    * 래퍼 클래스 타입은 초깃값이 null이기 때문에 구분 가능
+    * 따라서 래퍼 클래스 타입을 키로 사용
+  * Date랑 BigDecimal, BigInteger도 사용 가능
+  * 복합키를 만드는 맵핑하는 방법도 있지만 그건 논외
+
+* @GeneratedValue
+  * 주키의 생성 방법을 매핑하는 애노테이션
+  * 생성 전략과 생성기를 설정할 수 있음
+  * 기본 전략은 AUTO: 사용하는 DB에 따라 적절한 전략 선택
+    * 데이터베이스 벤더에 따라 기본 생성 전략이 다름
+    * 명시적으로 설정 가능 (기본 AUTO)
+  * TABLE, SEQUENCE, IDENTITY 중 하나
+
+* @Column
+  * @Entity 어노테이션이 태깅된 객체에 모든 멤버변수에는 @Column 어노테이션이 태깅된것과 마찬가지
+  * unique
+  * nullable
+  * length
+  * columnDefinition
+    * 컬럼을 벤더에 특화된 SQL 문법을 이용하여 정의할 경우 사용
+
+* @Temporal
+  * JPA 2.1까지는 Date와 Calendar만 지원
+    * JPA 2.2부터 LocalDate, LocalTime, LocalDateTime 등 가능
+  * TIME
+  * DATE
+  * TIMESTAMP (DATE + TIME)
+
+* @Transient
+  * 컬럼으로 맵핑하고 싶지 않은 멤버 변수에 사용
+
+* application.properties(YAML) 설정
+  * spring.jpa.show-sql=true
+    * SQL 보기
+  * spring.jpa.properties.hibernate.format_sql=true
+    * 읽기 형식 지정
+
+* hibernate ddl-auto 설정
+  * update 설정시 이미 컬럼이 생성된 경우에는 unique, nullable 등 속성이나 데이터 타입을 변경하여도 적용되지 않음
+
