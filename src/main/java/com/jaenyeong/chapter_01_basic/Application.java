@@ -1,4 +1,4 @@
-package com.jaenyeong;
+package com.jaenyeong.chapter_01_basic;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
