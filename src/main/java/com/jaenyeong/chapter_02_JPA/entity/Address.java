@@ -1,4 +1,4 @@
-package com.jaenyeong.chapter_02_JPA;
+package com.jaenyeong.chapter_02_JPA.entity;
 
 import javax.persistence.Embeddable;
 

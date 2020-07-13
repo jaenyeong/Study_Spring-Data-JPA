@@ -1,6 +1,8 @@
-package com.jaenyeong.chapter_02_JPA;
+package com.jaenyeong.chapter_02_JPA.entity;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 // 데이터베이스 테이블과 매핑되는 엔티티 표시
 // @Table이 생략되어 있는것과 동일
@@ -17,8 +19,8 @@ public class Account {
 	@GeneratedValue
 	private Long id;
 	// @Column 어노테이션이 생략되어 있는 것과 동일
-//	@Column
-	private String name;
+	@Column(nullable = false, unique = true)
+	private String userName;
 	private String password;
 
 	@Embedded
@@ -28,11 +30,28 @@ public class Account {
 	})
 	private Address address;
 
+	// mappedBy 속성으로 매핑하지 않으면 양쪽 필드에서 어노테이션 태깅해도 단방향 설정에 불과함
+	// mappedBy 연결을 해야 불필요한 스키마, 데이터가 생기지 않음
+	@OneToMany(mappedBy = "owner")
+	private Set<Study> studies = new HashSet<>();
+
 //	@Embedded
 //	private Address homeAddress;
 //
 //	@Embedded
 //	private Address officeAddress;
+
+	// Study, Account 관계 설정
+	public void addStudy(Study study) {
+		this.getStudies().add(study);
+		study.setOwner(this);
+	}
+
+	// Study, Account 관계 삭제
+	public void removeStudy(Study study) {
+		this.getStudies().remove(study);
+		study.setOwner(null);
+	}
 
 	public Long getId() {
 		return id;
@@ -43,12 +62,12 @@ public class Account {
 		return this;
 	}
 
-	public String getName() {
-		return name;
+	public String getUserName() {
+		return userName;
 	}
 
-	public Account setName(String name) {
-		this.name = name;
+	public Account setUserName(String userName) {
+		this.userName = userName;
 		return this;
 	}
 
@@ -58,6 +77,24 @@ public class Account {
 
 	public Account setPassword(String password) {
 		this.password = password;
+		return this;
+	}
+
+	public Address getAddress() {
+		return address;
+	}
+
+	public Account setAddress(Address address) {
+		this.address = address;
+		return this;
+	}
+
+	public Set<Study> getStudies() {
+		return studies;
+	}
+
+	public Account setStudies(Set<Study> studies) {
+		this.studies = studies;
 		return this;
 	}
 }

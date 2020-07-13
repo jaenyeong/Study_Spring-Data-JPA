@@ -202,3 +202,32 @@ https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81-%EB%8D%B0%EC%9D%B4%E
   * @AttributeOverride
     * Address의 street 필드를 home_street 이라는 컬럼명으로 사용
     * @AttributeOverride(name = "street", column = @Column(name = "home_street"))
+
+#### 1:N mapping
+* 관계에는 항상 두 엔티티가 존재
+  * 둘 중 하나는 그 관계의 주인(owning)이고 다른 쪽은 종속(non-owning)
+  * 해당 관계의 반대쪽 레퍼런스를 가지고 있는 쪽이 주인
+
+* 단방향에서의 관계의 주인은 명확함
+  * 관계를 정의한 쪽이 그 관계의 주인
+
+* 단방향 @ManyToOne
+  * 기본값은 FK 생성
+  * 예제에서 ``` Study ``` 객체에 ``` Account owner ``` 필드 선언 후 @ManyToOne 태깅
+    * Study가 Account의 FK(owner_id)를 갖고 있음
+
+* 단방향 @OneToMany
+  * 기본값은 조인 테이블 생성
+  * 예제에서 ``` Account ``` 객체에 ``` Set<Study> studies ``` 필드 선언 후 @OneToMany 태깅
+    * account_studies 조인 테이블 생성
+
+* 양방향
+  * FK 가지고 있는 쪽이 오너
+    * 따라서 기본값은 @ManyToOne 가지고 있는 쪽이 주인
+  * 주인이 아닌쪽(@OneToMany쪽)에서 mappedBy 사용해서 관계를 맺고 있는 필드를 설정해야 함
+    * mappedBy 속성으로 매핑하지 않으면 양쪽 필드에서 어노테이션 태깅해도 단방향 설정에 불과함
+
+* 양방향
+  * @ManyToOne (이쪽이 주인)
+  * @OneToMany(mappedBy)
+  * 주인한테 관계를 설정해야 DB에 반영됨
