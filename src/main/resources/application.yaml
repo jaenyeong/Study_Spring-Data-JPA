@@ -13,3 +13,11 @@ spring:
             non_contextual_creation: true
         format_sql: true
     show-sql: true
+
+logging:
+  level:
+    org:
+      hibernate:
+        type:
+          descriptor:
+            sql: trace

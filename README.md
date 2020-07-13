@@ -291,3 +291,22 @@ https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81-%EB%8D%B0%EC%9D%B4%E
 * 동작 원리
   * 시작은 @Import(JpaRepositoriesRegistrar.class)
   * 핵심은 ImportBeanDefinitionRegistrar 인터페이스
+
+#### 정리
+* SQL 확인
+  * logging.level.org.hibernate.SQL=debug
+    * spring.jpa.show-sql=true 와 동일함
+  * logging.level.org.hibernate.type.descriptor.sql=trace
+
+### 스프링 Data JPA 활용
+
+#### 파트
+* Spring Data
+  * SQL & NoSQL 저장소 지원 프로젝트의 묶음(집합)
+* Spring Data Common
+  * 여러 저장소 프로젝트의 공통적인 기능 지원(제공)
+* Spring Data Rest
+  * 저장소의 데이터를 하이퍼미디어 기반 HTTP 리소스로(REST API로) 제공하는 프로젝트
+* Spring Data JPA
+  * Spring Data에 속한 프로젝트 중 하나
+  * Spring Data Common이 제공하는 기능에 JPA 관련 기능 추가

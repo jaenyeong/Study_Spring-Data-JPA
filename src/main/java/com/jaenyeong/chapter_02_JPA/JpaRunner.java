@@ -51,7 +51,7 @@ public class JpaRunner implements ApplicationRunner {
 
 //		exampleNativeQuery();
 
-		exampleJpaRepository();
+//		exampleJpaRepository();
 	}
 
 	private void exampleJpaRepository() {
