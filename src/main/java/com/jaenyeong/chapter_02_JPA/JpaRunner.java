@@ -24,12 +24,14 @@ public class JpaRunner implements ApplicationRunner {
 	@Override
 //	@Transactional
 	public void run(ApplicationArguments args) throws Exception {
-		exampleBasic();
+//		exampleBasic();
 
 		examplePersistent();
 	}
 
 	private void examplePersistent() {
+		Session session = entityManager.unwrap(Session.class);
+
 //		Post post = new Post();
 //		post.setTitle("Spring Data JPA 제목");
 //
@@ -41,12 +43,26 @@ public class JpaRunner implements ApplicationRunner {
 //		Comment comment2 = new Comment();
 //		comment2.setComment("contents.. [2]");
 //		post.addComment(comment2);
-
-		Session session = entityManager.unwrap(Session.class);
+//
 //		session.save(post);
 
-//		Post post = session.get(Post.class, 1L);
-//		session.delete(post);
+		Post searchPost = session.get(Post.class, 1L);
+		// 삭제
+//		session.delete(searchPost);
+
+		System.out.println("==*--------------*-------------*==");
+		System.out.println(searchPost.getTitle());
+
+		// Post 객체가 가진 Comment 리스트 출력
+		searchPost.getComments().forEach(c -> {
+			System.out.println("==*---------------------------*==");
+			System.out.println(c.getComment());
+		});
+
+//		Comment eagerComment = session.get(Comment.class, 2L);
+//		System.out.println("==*--------------*-------------*==");
+//		System.out.println(eagerComment.getComment());
+//		System.out.println(eagerComment.getPost().getTitle());
 	}
 
 	private void exampleBasic() {

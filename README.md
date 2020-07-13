@@ -250,3 +250,19 @@ https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81-%EB%8D%B0%EC%9D%B4%E
   * Post 객체에 ``` Set<Comment> comments ``` 필드에 cascade 옵션 적용
     * ``` @OneToMany(mappedBy = "post", cascade = CascadeType.PERSIST) ```
     * Post 객체에 comments 필드가 persistent 상태로 변경되어 데이터베이스에 저장됨
+
+#### Fetch
+* 연관 관계의 엔티티(객체 데이터)를 가져오는 방법
+  * Eager
+    * 연관관계에 있는 엔티티들을 지금 모두 가져옴
+  * Lazy
+    * 연관관계에 있는 엔티티들을 지금 가져오지 않고 getter 등 사용시에 가져옴
+  * @OneToMany의 기본값은 Lazy
+  * @ManyToOne의 기본값은 Eager
+
+* Lazy 로딩으로 인한 N + 1 문제
+  * 예를 들어 Post 객체 목록을 가져온 후 반복해서 Post에 속한(참조된) Comment를 출력한다고 가정했을 때
+    * 전체 Post 목록 데이터를 가져오는 쿼리
+    * 각 Post에 속한 Comment 데이터를 각각 Post 목록 수만큼 가져오는 쿼리 (사용 직전에 가져오는 Lazy 로딩 때문)
+    * 비효율적
+  * 하지만 예제에서는 Comment를 한 번에 쿼리로 가져옴
