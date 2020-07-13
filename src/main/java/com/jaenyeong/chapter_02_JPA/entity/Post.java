@@ -4,6 +4,7 @@ import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
+//@NamedQueries({@NamedQuery(name = "all_post", query = "SELECT p FROM Post AS p")})
 @Entity
 public class Post {
 	@Id @GeneratedValue
@@ -46,5 +47,15 @@ public class Post {
 	public Post setComments(Set<Comment> comments) {
 		this.comments = comments;
 		return this;
+	}
+
+	@Override
+	public String toString() {
+		return "Post{" +
+				"id=" + id +
+				", title='" + title + '\'' +
+				// Comments 때문에 comment 데이터를 가져오는 쿼리 출력됨
+//				", comments=" + comments +
+				'}';
 	}
 }

@@ -11,7 +11,12 @@ import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Component
 @Transactional
@@ -24,13 +29,52 @@ public class JpaRunner implements ApplicationRunner {
 	@Override
 //	@Transactional
 	public void run(ApplicationArguments args) throws Exception {
-//		exampleBasic();
+		// 하이버네이트에서 제공하는 API
+		// 엔티티매니저가 하이버네이트 구현체를 사용
+		// JPA가 감싸고 있는 하이버네이트를 통해 사용
+		Session session = entityManager.unwrap(Session.class);
 
-		examplePersistent();
+//		exampleBasic(session);
+
+//		examplePersistent(session);
+
+//		exampleJPQL();
+
+//		exampleCriteria();
+
+		exampleNativeQuery();
 	}
 
-	private void examplePersistent() {
-		Session session = entityManager.unwrap(Session.class);
+	private void exampleNativeQuery() {
+		List<Post> posts = entityManager.createNativeQuery("SELECT * FROM Post", Post.class).getResultList();
+		posts.forEach(System.out::println);
+	}
+
+	private void exampleCriteria() {
+		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+		CriteriaQuery<Post> criteria = builder.createQuery(Post.class);
+		Root<Post> root = criteria.from(Post.class);
+		criteria.select(root);
+		List<Post> posts = entityManager.createQuery(criteria).getResultList();
+
+		posts.forEach(System.out::println);
+	}
+
+	private void exampleJPQL() {
+//		entityManager.persist();
+
+		// DB에 독립적 > 벤더에 맞는 SQL이 실행됨
+		// 쿼리 오타 등으로 인해 타입 세이프하지 않음
+		TypedQuery<Post> query = entityManager.createQuery("SELECT p FROM Post AS p", Post.class);
+		List<Post> posts = query.getResultList();
+
+		posts.forEach(System.out::println);
+
+		// namedQuery
+//		entityManager.createNamedQuery("all_post");
+	}
+
+	private void examplePersistent(Session session) {
 
 //		Post post = new Post();
 //		post.setTitle("Spring Data JPA 제목");
@@ -65,7 +109,7 @@ public class JpaRunner implements ApplicationRunner {
 //		System.out.println(eagerComment.getPost().getTitle());
 	}
 
-	private void exampleBasic() {
+	private void exampleBasic(Session session) {
 		/*
 		 * Transient
 		 */
@@ -98,7 +142,6 @@ public class JpaRunner implements ApplicationRunner {
 		 * persistent
 		 */
 		// 핵심 API
-		Session session = entityManager.unwrap(Session.class);
 		session.save(account);
 		session.save(study);
 

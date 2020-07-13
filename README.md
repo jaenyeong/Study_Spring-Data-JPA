@@ -266,3 +266,16 @@ https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81-%EB%8D%B0%EC%9D%B4%E
     * 각 Post에 속한 Comment 데이터를 각각 Post 목록 수만큼 가져오는 쿼리 (사용 직전에 가져오는 Lazy 로딩 때문)
     * 비효율적
   * 하지만 예제에서는 Comment를 한 번에 쿼리로 가져옴
+
+#### Query
+* JPQL (HQL)
+  * Java Persistence Query Language / Hibernate Query Language
+  * SQL 과의 차이는 데이터베이스 테이블이 아닌, 엔티티 객체 모델 기반으로 쿼리 작성
+  * JPA 또는 하이버네이트가 해당 쿼리를 SQL로 변환해서 실행함
+  * 문자열이기 때문에 타입 세이프하지 않음 (오타 등)
+
+* Criteria
+  * 타입 세이프 쿼리
+  
+* Native Query
+  * SQL 쿼리 실행
