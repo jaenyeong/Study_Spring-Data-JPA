@@ -310,3 +310,17 @@ https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81-%EB%8D%B0%EC%9D%B4%E
 * Spring Data JPA
   * Spring Data에 속한 프로젝트 중 하나
   * Spring Data Common이 제공하는 기능에 JPA 관련 기능 추가
+
+### 스프링 Data Common
+
+#### Repository
+* JpaRepository
+  * Spring Data JPA에서 지원하는 인터페이스
+  * PagingAndSortingRepository 인터페이스를 구현, PagingAndSortingRepository 부터는 Spring Data Common에 속함
+  * Repository < CrudRepository < PagingAndSortingRepository < JpaRepository
+
+* 테스트
+  * @DataJpaTest는 트랜잭션인데 테스트에서는 모두 롤백처리 하기 때문에 애당초 데이터 삽입 쿼리를 날리지 않음
+    * @DataJdbcTest와 혼동하지 말 것
+  * 따라서 삽입 쿼리 확인은 테스트에 @Rollback(false) 어노테이션 태깅할 것
+  * 테스트시 Postgres 데이터베이스를 사용하지 않고 H2 데이터베이스를 사용

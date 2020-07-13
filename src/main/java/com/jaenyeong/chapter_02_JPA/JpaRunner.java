@@ -2,8 +2,10 @@ package com.jaenyeong.chapter_02_JPA;
 
 import com.jaenyeong.chapter_02_JPA.Jaenyeong.Jaenyeong;
 import com.jaenyeong.chapter_02_JPA.entity.Account;
+import com.jaenyeong.chapter_02_JPA.entity.Comment;
 import com.jaenyeong.chapter_02_JPA.entity.Post;
 import com.jaenyeong.chapter_02_JPA.entity.Study;
+import com.jaenyeong.chapter_02_JPA.repository.JpaPostRepository;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
@@ -51,7 +53,7 @@ public class JpaRunner implements ApplicationRunner {
 
 //		exampleNativeQuery();
 
-//		exampleJpaRepository();
+		exampleJpaRepository();
 	}
 
 	private void exampleJpaRepository() {
@@ -91,19 +93,19 @@ public class JpaRunner implements ApplicationRunner {
 
 	private void examplePersistent(Session session) {
 
-//		Post post = new Post();
-//		post.setTitle("Spring Data JPA 제목");
-//
-//		Comment comment1 = new Comment();
-//		comment1.setComment("contents.. [1]");
-//		// Post 객체에 comment 필드에 cascade 옵션 없으면 데이터베이스에 저장되지 않음
-//		post.addComment(comment1);
-//
-//		Comment comment2 = new Comment();
-//		comment2.setComment("contents.. [2]");
-//		post.addComment(comment2);
-//
-//		session.save(post);
+		Post post = new Post();
+		post.setTitle("Spring Data JPA 제목");
+
+		Comment comment1 = new Comment();
+		comment1.setComment("contents.. [1]");
+		// Post 객체에 comment 필드에 cascade 옵션 없으면 데이터베이스에 저장되지 않음
+		post.addComment(comment1);
+
+		Comment comment2 = new Comment();
+		comment2.setComment("contents.. [2]");
+		post.addComment(comment2);
+
+		session.save(post);
 
 		Post searchPost = session.get(Post.class, 1L);
 		// 삭제
