@@ -1,6 +1,8 @@
 package com.jaenyeong.chapter_02_JPA;
 
 import com.jaenyeong.chapter_02_JPA.entity.Account;
+import com.jaenyeong.chapter_02_JPA.entity.Comment;
+import com.jaenyeong.chapter_02_JPA.entity.Post;
 import com.jaenyeong.chapter_02_JPA.entity.Study;
 import org.hibernate.Session;
 import org.springframework.boot.ApplicationArguments;
@@ -22,6 +24,35 @@ public class JpaRunner implements ApplicationRunner {
 	@Override
 //	@Transactional
 	public void run(ApplicationArguments args) throws Exception {
+		exampleBasic();
+
+		examplePersistent();
+	}
+
+	private void examplePersistent() {
+//		Post post = new Post();
+//		post.setTitle("Spring Data JPA 제목");
+//
+//		Comment comment1 = new Comment();
+//		comment1.setComment("contents.. [1]");
+//		// Post 객체에 comment 필드에 cascade 옵션 없으면 데이터베이스에 저장되지 않음
+//		post.addComment(comment1);
+//
+//		Comment comment2 = new Comment();
+//		comment2.setComment("contents.. [2]");
+//		post.addComment(comment2);
+
+		Session session = entityManager.unwrap(Session.class);
+//		session.save(post);
+
+//		Post post = session.get(Post.class, 1L);
+//		session.delete(post);
+	}
+
+	private void exampleBasic() {
+		/*
+		 * Transient
+		 */
 		Account account = new Account();
 		account.setUserName("jaenyeong");
 		account.setPassword("jpa");
@@ -47,9 +78,21 @@ public class JpaRunner implements ApplicationRunner {
 		// 위 2개 호출
 		account.addStudy(study);
 
+		/*
+		 * persistent
+		 */
 		// 핵심 API
 		Session session = entityManager.unwrap(Session.class);
 		session.save(account);
 		session.save(study);
+
+		// DB에서 직접 가져오지 않고 1차 캐싱된 데이터를 반환
+		Account jaenyeong = session.load(Account.class, account.getId());
+		jaenyeong.setUserName("Noah1");
+		jaenyeong.setUserName("Noah2");
+		// 최종적으로 데이터가 변경되지 않은경우 업데이트 쿼리가 발생하지 않음
+		jaenyeong.setUserName("jaenyeong");
+		System.out.println("==*--------------*-------------*==");
+		System.out.println(jaenyeong.getUserName());
 	}
 }

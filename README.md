@@ -231,3 +231,22 @@ https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81-%EB%8D%B0%EC%9D%B4%E
   * @ManyToOne (이쪽이 주인)
   * @OneToMany(mappedBy)
   * 주인한테 관계를 설정해야 DB에 반영됨
+
+#### JPA Cascade
+* 엔티티의 상태 변화를 전파(전이) 시키는 옵션
+
+* 엔티티 상태
+  * Transient : JPA가 모르는 상태
+    * 단순 객체 생성시
+    * @Transient 어노테이션이 태깅된 컬럼
+  * Persistent : JPA가 관리중인 상태 (1차 캐시, Dirty Checking, Write Behind, ...)
+    * 1차 캐시 : Persistent Context에 인스턴스가 저장(캐싱) 또는 그 상태
+    * Dirth checking : 변경 상태 검사, 트랜잭션 내부에서 엔티티의 변경 상태를 검사하여 자동으로 데이터베이스에 반영
+    * Write Behind : 엔티티의 변경된 데이터를 데이터베이스의 최대한 늦게(최대한 적은 횟수로) 반영
+  * Detached : JPA가 더이상 관리하지 않는 상태
+  * Removed : JPA가 관리하긴 하지만 삭제하기로 한 상태
+
+* 예제
+  * Post 객체에 ``` Set<Comment> comments ``` 필드에 cascade 옵션 적용
+    * ``` @OneToMany(mappedBy = "post", cascade = CascadeType.PERSIST) ```
+    * Post 객체에 comments 필드가 persistent 상태로 변경되어 데이터베이스에 저장됨
