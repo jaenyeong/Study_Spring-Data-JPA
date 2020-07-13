@@ -324,3 +324,9 @@ https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81-%EB%8D%B0%EC%9D%B4%E
     * @DataJdbcTest와 혼동하지 말 것
   * 따라서 삽입 쿼리 확인은 테스트에 @Rollback(false) 어노테이션 태깅할 것
   * 테스트시 Postgres 데이터베이스를 사용하지 않고 H2 데이터베이스를 사용
+
+#### Repository Interface 정의
+* @RepositoryDefinition
+  * Repository 인터페이스로 공개할 메소드를 직접 일일이 정의할 때 사용
+* @NoRepositoryBean
+  * 공통 인터페이스 정의할 때 사용
