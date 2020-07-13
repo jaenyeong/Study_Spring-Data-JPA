@@ -330,3 +330,26 @@ https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81-%EB%8D%B0%EC%9D%B4%E
   * Repository 인터페이스로 공개할 메소드를 직접 일일이 정의할 때 사용
 * @NoRepositoryBean
   * 공통 인터페이스 정의할 때 사용
+
+#### Null
+* 스프링 데이터 2.0 부터 자바 8의 Optional 지원
+  * Optional<Post> findById(Long id);
+
+* 컬렉션은 Null을 리턴하지 않고, 비어있dd는 컬렉션을 리턴
+
+* 스프링 프레임워크 5.0부터 지원하는 Null 애노테이션 지원
+  * @NonNullApi(패키지 레벨)
+    * package-info.java 파일에 패키지위에 어노테이션 태깅
+    * 패키지 안에 모든 파라미터, 리턴 타입 등이 @NonNull이 태깅된것과 같음
+      * 따라서 Null 허용하려면 해당 위치에 @Nullable 어노테이션을 일일이 태깅해야 해야함
+    * 현재까진 툴 지원이 안되는 걸로 보임
+  * @NonNull, @Nullable
+  * 런타임 체크 지원 함
+  * JSR 305 애노테이션을 메타 애노테이션으로 가지고 있음 (IDE 및 빌드 툴 지원)
+
+* 인텔리J 설정
+  * Build, Execution, Deployment
+    * Compiler
+      * Add runtime assertion for notnull-annotated methods and parameters
+      * CONFIGURE ANNOTATION
+      * 각각 Nullable, NonNUll에 스프링 패키지 어노테이션 추가
