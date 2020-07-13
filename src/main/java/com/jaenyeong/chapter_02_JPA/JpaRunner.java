@@ -1,10 +1,11 @@
 package com.jaenyeong.chapter_02_JPA;
 
+import com.jaenyeong.chapter_02_JPA.Jaenyeong.Jaenyeong;
 import com.jaenyeong.chapter_02_JPA.entity.Account;
-import com.jaenyeong.chapter_02_JPA.entity.Comment;
 import com.jaenyeong.chapter_02_JPA.entity.Post;
 import com.jaenyeong.chapter_02_JPA.entity.Study;
 import org.hibernate.Session;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
@@ -26,6 +27,12 @@ public class JpaRunner implements ApplicationRunner {
 	@PersistenceContext
 	EntityManager entityManager;
 
+	@Autowired
+	JpaPostRepository postRepository;
+
+	@Autowired
+	Jaenyeong jaenyeong;
+
 	@Override
 //	@Transactional
 	public void run(ApplicationArguments args) throws Exception {
@@ -42,7 +49,15 @@ public class JpaRunner implements ApplicationRunner {
 
 //		exampleCriteria();
 
-		exampleNativeQuery();
+//		exampleNativeQuery();
+
+		exampleJpaRepository();
+	}
+
+	private void exampleJpaRepository() {
+		System.out.println("jaenyeong: " + jaenyeong);
+
+		postRepository.findAll().forEach(System.out::println);
 	}
 
 	private void exampleNativeQuery() {

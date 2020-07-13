@@ -279,3 +279,15 @@ https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81-%EB%8D%B0%EC%9D%B4%E
   
 * Native Query
   * SQL 쿼리 실행
+
+#### 스프링 Data JPA
+* JpaRepository<Entity, Id> 인터페이스
+  * JpaRepository 인터페이스를 구현하면 클래스에 @Repository가 없어도 빈으로 등록해 줌
+
+* @EnableJpaRepositories
+  * 스프링 부트를 사용하지 않았다면 @Configuration가 태깅된 클래스(설정 클래스)에 @EnableJpaRepositories를 태깅했어야 함
+  * 동작 원리 핵심
+
+* 동작 원리
+  * 시작은 @Import(JpaRepositoriesRegistrar.class)
+  * 핵심은 ImportBeanDefinitionRegistrar 인터페이스
