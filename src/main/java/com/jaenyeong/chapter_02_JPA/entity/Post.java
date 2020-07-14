@@ -1,5 +1,8 @@
 package com.jaenyeong.chapter_02_JPA.entity;
 
+import com.jaenyeong.chapter_02_JPA.domainEvent.PostPublishedEvent;
+import org.springframework.data.domain.AbstractAggregateRoot;
+
 import javax.persistence.*;
 import java.util.Date;
 import java.util.HashSet;
@@ -7,7 +10,10 @@ import java.util.Set;
 
 //@NamedQueries({@NamedQuery(name = "all_post", query = "SELECT p FROM Post AS p")})
 @Entity
-public class Post {
+//public class Post {
+// 도메인 이벤트 퍼블리싱을 위하여 상속
+public class Post extends AbstractAggregateRoot<Post> {
+
 	@Id
 	@GeneratedValue
 	private Long id;
@@ -31,6 +37,13 @@ public class Post {
 	public void addComment(Comment comment) {
 		this.getComments().add(comment);
 		comment.setPost(this);
+	}
+
+	// 퍼블리싱
+	public Post publish() {
+		// 이벤트 등록
+		this.registerEvent(new PostPublishedEvent(this));
+		return this;
 	}
 
 	public Long getId() {

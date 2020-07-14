@@ -537,3 +537,44 @@ https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81-%EB%8D%B0%EC%9D%B4%E
       * @Id 어노테이션을 필드에 붙이면 필드를 기준으로, getter에 붙이면 getter를 기준으로 영속화 됨
     * AccessType.FIELD 경우 메서드를 거치지 않고 직접 필드를 읽어오기 때문에 메서드에 별도 로직이 존재하는 경우 동작하지 않음
       * AccessType.PROPERTY
+
+#### Domain event publish
+* 도메인 관련 이벤트 발생
+  * ApplicationContext는 단순 빈팩토리를 넘어서 이벤트 퍼블리셔 기능
+    * ApplicationContext extends ApplicationEventPublisher
+  * 이벤트
+    * 이벤트 객체 구현시 ApplicationEvent 객체 상속
+    * ``` extends ApplicationEvent ```
+  * 리스너
+    * 리스너 객체 구현시 ApplicationListener 인터페이스 구현
+    * ``` implements ApplicationListener<E extends ApplicationEvent> ```
+    * @EventListener
+      * 위 ApplicationListener 인터페이스를 구현하지 않고 메서드에 @EventListener 어노테이션 태깅
+      * 해당 리스너가 빈으로 등록 되어 있어야 함
+  * 예제
+    * 이벤트 : ``` public class PostPublishedEvent extends ApplicationEvent ```
+    * 리스너 : ``` public class PostListener implements ApplicationListener<PostPublishedEvent> ```
+    * 테스트
+      * 기본적으로 스프링은 슬라이싱 테스트(일부 레이어만 테스트 하는 것)이기 때문에 테스트 패키지에서 빈으로 따로 등록 필요
+      * 예제에서는 @DataJpaTest 어노테이션을 사용하여 테스트를 진행하고 있기 때문에 데이터 관련 빈들만 등록하여 테스트가 진행됨
+        * 프로덕션 코드에서 @Component 등을 태깅하여도 테스트엔 적용되지 않음
+        * @Repository 어노테이션을 사용하면 테스트에서 인식할 수도 있으나 바람직한 방법은 아님
+      * 스프링 슬라이싱 테스트
+        * @JsonTest
+        * @WebMvcTest
+        * @WebFluxTest
+        * @DataJpaTest
+      * 테스트 패키지에 ListenerTestConfig 클래스 구현하여 @Configuration 어노테이션 태깅
+        * ListenerTestConfig 안에서 PostListener 객체를 빈으로 등록
+      * 리스너 클래스를 직접 구현하고 싶지 않은 경우
+        * 빈으로 등록되는 아래와 같은 메서드에서
+        * ``` public ApplicationListener<PostPublishedEvent> notCreatePostListener() ```
+        * 익명 클래스 구현 또는 람다식으로 반환 객체를 작성하여 사용
+
+* 스프링 데이터의 도메인 이벤트 Publisher
+  * @DomainEvents
+    * 도메인 이벤트를 모아두는 메서드
+  * @AfterDomainEventPublication
+    * 누적된 이벤트를 비움
+  * extends AbstractAggregateRoot<E>
+  * 현재는 save() 할 때만 발생

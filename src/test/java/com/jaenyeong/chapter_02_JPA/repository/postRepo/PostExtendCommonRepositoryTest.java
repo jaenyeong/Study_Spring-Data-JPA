@@ -30,5 +30,4 @@ public class PostExtendCommonRepositoryTest {
 		postRepository.delete(post);
 		postRepository.flush();
 	}
-
 }
