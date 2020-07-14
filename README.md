@@ -353,3 +353,118 @@ https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81-%EB%8D%B0%EC%9D%B4%E
       * Add runtime assertion for notnull-annotated methods and parameters
       * CONFIGURE ANNOTATION
       * 각각 Nullable, NonNUll에 스프링 패키지 어노테이션 추가
+
+#### Query 생성
+* Spring 데이터 저장소의 쿼리 만드는 방법
+  * 메소드명을 분석해서 쿼리 만들기 (CREATE)
+    * Spring Data가 메서드명을 분석해 쿼리를 생성해주는 방법
+    * ``` List<Comment> findByTitleContains(String keyword); ```
+    * 쿼리를 메서드명으로 만들지 못하는 경우 레파지토리 빈을 생성하다 에러 발생하여 앱 종료됨
+  * 미리 정의해 둔 쿼리 찾아 사용하기 (USE_DECLARED_QUERY)
+    * 기본 JPQL : ``` @Query("SELECT C FROM Comment as C") ```
+    * SQL : ``` @Query(value = "SELECT C FROM Comment as C", nativeQuery = true) ```
+  * 미리 정의한 쿼리 찾아보고 없으면 만들기 (CREATE_IF_NOT_FOUND)
+    * 기본값 (위 2가지 방법을 합친 것)
+
+* 어노테이션 순서
+  * @EnableJpaRepositories 어노테이션에서 QueryLookupStrategy 속성 안에 RepositoryQuery를 생성하는데 쓰이는 전략 확인
+  * RepositoryQuery 구현체 > JpaQueryLookupStrategy 클래스
+  * JpaQueryLookupStrategy 클래스 안에 위에서 설명한 CreateQueryLookupStrategy, DeclaredQueryLookupStrategy 정적 클래스 존재
+  * DeclaredQueryLookupStrategy 클래스 (이미 정의된 쿼리를 찾아내는 방법)
+    * 정의된 쿼리를 찾을 때 어노테이션 우선 순위
+      * @Query, @Procedure, @NamedQuery 순서대로 적용
+
+* 쿼리 만드는 방법
+  * 리턴타입 {접두어}{도입부}By{프로퍼티 표현식}(조건식)[(And|Or){프로퍼티 표현식}(조건식)]{정렬 조건} (파라미터)
+    * ```
+      Page<Comment> findByLikeGreaterThanAndPostOrderByCreatedDesc(int likeCount, Post post, Pageable pageable);
+      ```
+    * ```
+      List<Comment> findByLikeGreaterThanAndPost(int likeCount, Post post, Sort sort);
+      ```
+    * 리턴타입
+      * E, Optional<E>, List<E>, Page<E>, Slice<E>, Stream<E>
+    * 접두어
+      * Find, Get, Query, Count, 기타..
+    * 도입부
+      * Distinct, First(N), Top(N)
+    * 프로퍼티 표현식
+      * Person.Address.ZipCode => find(Person)ByAddress_ZipCode(...)
+    * 조건식
+      * IgnoreCase, Between, LessThan, GreaterThan, Like, Contains, 기타..
+    * 정렬조건
+      * OrderBy{프로퍼티}Asc|Desc
+    * 파라미터
+      * Pageable, Sort
+
+* 쿼리 찾는 방법
+  * 메소드명으로 쿼리를 표현하기 힘든 경우에 사용
+  * 저장소 기술에 따라 다름
+  * JPA: @Query @NamedQuery
+
+* 기본 예제
+  * ```
+    List<Person> findByEmailAddressAndLastname(EmailAddress emailAddress, String lastname);
+    ```
+  * ```
+    // distinct  
+    List<Person> findDistinctPeopleByLastnameOrFirstname(String lastname, String firstname);
+    ```
+  * ```
+    List<Person> findPeopleDistinctByLastnameOrFirstname(String lastname, String firstname);
+    ```
+  * ```
+    // ignoring case
+    List<Person> findByLastnameIgnoreCase(String lastname);
+    ```
+  * ```
+    // ignoring case
+    List<Person> findByLastnameAndFirstnameAllIgnoreCase(String lastname, String firstname);
+    ```
+
+* 정렬 예제
+  * ``` List<Person> findByLastnameOrderByFirstnameAsc(String lastname); ```
+  * ``` List<Person> findByLastnameOrderByFirstnameDesc(String lastname); ```
+
+* 페이징 예제
+  * ``` Page<User> findByLastname(String lastname, Pageable pageable); ```
+  * ``` Slice<User> findByLastname(String lastname, Pageable pageable); ```
+  * ``` List<User> findByLastname(String lastname, Sort sort); ```
+  * ``` List<User> findByLastname(String lastname, Pageable pageable); ```
+
+* 스트림 예제
+  * ``` Stream<User> readAllByFirstnameNotNull(); ```
+    * try-with-resource 사용할 것
+    * Stream을 다 쓴다음에 close() 해야 함
+
+#### Async Query
+* 비동기 쿼리
+  * 쿼리에 @Async 어노테이션 태깅
+    * 하지만 @Async 어노테이션만으로는 비동기적으로 수행되지 않음
+    * 이 어노테이션은 백그라운드 스레드 풀에 해당 작업을 위임, 별도의 스레드에서 동작 시키는 것
+    * 비동기 처리를 위해서는 @SpringBootApplication 이 태깅된 클래스에 @EnableAsync 어노테이션 태깅* 
+    * 하지만 예제에서는 태깅 후에도 비동기 처리가 원활히 이루어지지 않고 테스트 코드 작성이 어려움
+    * 따라서 가급적 사용을 권하지 않음
+  * @Async Future<User> findByFirstname(String firstname);
+    * Future는 자바 5  
+  * @Async CompletableFuture<User> findOneByFirstname(String firstname);
+    * CompletableFuture는 자바 8
+  * @Async ListenableFuture<User> findOneByLastname(String lastname);
+    * ListenableFuture는 스프링 프레임워크
+    * 제일 깔끔함
+  * 해당 메소드를 스프링 TaskExecutor에 전달해서 별도의 쓰레드에서 실행
+  * Reactive랑은 다른 것임
+
+* 테스트 예제
+  * 테스트 진행 시에 ListenableFuture 객체를 사용하여 addCallback 메서드 호출 하는 테스트 코드가 없다고 판단
+  * 따라서 데이터 삽입 쿼리 또한 호출, 실행되지 않음
+  * 테스트코드는 기본적으로 롤백처리 되기 때문에
+  * 예제 태스트 코드에서 아무런 작업을 수행하지 않는다고 판단하면 데이터를 삽압하지 않음
+
+* 권장하지 않는 이유
+  * 테스트 코드 작성이 어려움
+  * 코드 복잡도 증가
+  * 성능상 이득이 없음 
+  * DB 부하는 결국 같고 메인 스레드 대신 백드라운드 스레드가 일하는 정도의 차이
+    * 성능 튜닝이 필요하다면 쿼리 호출 횟수, 최소한의 데이터를 가져오는 등 다른 부분에서 튜닝하는 것이 바람직 
+  * 단, 백그라운드로 실행하고 결과를 받을 필요가 없는 작업이라면 @Async를 사용해서 응답 속도를 향상 시킬 수는 있음
