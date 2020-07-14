@@ -5,7 +5,7 @@ import com.jaenyeong.chapter_02_JPA.entity.Account;
 import com.jaenyeong.chapter_02_JPA.entity.Comment;
 import com.jaenyeong.chapter_02_JPA.entity.Post;
 import com.jaenyeong.chapter_02_JPA.entity.Study;
-import com.jaenyeong.chapter_02_JPA.repository.JpaPostRepository;
+import com.jaenyeong.chapter_02_JPA.repository.postRepo.JpaPostRepository;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;

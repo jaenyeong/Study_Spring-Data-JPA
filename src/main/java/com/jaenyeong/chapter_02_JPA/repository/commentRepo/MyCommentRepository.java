@@ -1,7 +1,8 @@
-package com.jaenyeong.chapter_02_JPA.repository;
+package com.jaenyeong.chapter_02_JPA.repository.commentRepo;
 
 import com.jaenyeong.chapter_02_JPA.entity.Comment;
 import com.jaenyeong.chapter_02_JPA.entity.Post;
+import com.jaenyeong.chapter_02_JPA.repository.CommonRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Async;

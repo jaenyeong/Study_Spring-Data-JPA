@@ -1,4 +1,4 @@
-package com.jaenyeong.chapter_02_JPA.repository;
+package com.jaenyeong.chapter_02_JPA.repository.commentRepo;
 
 import com.jaenyeong.chapter_02_JPA.entity.Comment;
 import org.springframework.data.repository.RepositoryDefinition;

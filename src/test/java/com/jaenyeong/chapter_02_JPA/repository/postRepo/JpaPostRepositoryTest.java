@@ -1,4 +1,4 @@
-package com.jaenyeong.chapter_02_JPA.repository;
+package com.jaenyeong.chapter_02_JPA.repository.postRepo;
 
 import com.jaenyeong.chapter_02_JPA.entity.Post;
 import org.junit.Test;
@@ -72,5 +72,25 @@ public class JpaPostRepositoryTest {
 
 		// then
 		assertThat(cntSpring).isEqualTo(1);
+	}
+
+	@Test
+	public void crud() throws Exception {
+		postRepository.findMyPost();
+
+		Post post = new Post();
+		post.setTitle("hibernate");
+		postRepository.save(post);
+
+		// 삽입 후 바로 삭제 및 테스트 종료가 된다면 데이터 삽입 쿼리가 날라가지 않음
+		// 따라서 저장 후 바로 결과값 조회 쿼리를 호출한다면 그 전 삽입 쿼리가 날라가야 된다고 판단하여
+		// 이 전에 삽입한 쿼리를 flush하게 됨
+		postRepository.findMyPost();
+
+		postRepository.delete(post);
+
+		// 테스트 특성상 롤백처리 되기 때문에 테스트 종료되면 삭제 쿼리가 의미가 없다고 판단하여 위 삭제 쿼리가 호출되지 않음
+		// 따라서 강제로 삭제 쿼리 전송을 위해 flush 호출
+		postRepository.flush();
 	}
 }

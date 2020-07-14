@@ -468,3 +468,72 @@ https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81-%EB%8D%B0%EC%9D%B4%E
   * DB 부하는 결국 같고 메인 스레드 대신 백드라운드 스레드가 일하는 정도의 차이
     * 성능 튜닝이 필요하다면 쿼리 호출 횟수, 최소한의 데이터를 가져오는 등 다른 부분에서 튜닝하는 것이 바람직 
   * 단, 백그라운드로 실행하고 결과를 받을 필요가 없는 작업이라면 @Async를 사용해서 응답 속도를 향상 시킬 수는 있음
+
+#### Custom repository
+* 쿼리 메소드(쿼리 생성과 쿼리 찾아쓰기)로 해결이 되지 않는 경우 직접 구현(코딩) 가능
+  * 스프링 데이터 레퍼지토리 인터페이스에 기능 추가
+  * 스프링 데이터 레퍼지토리 기본 기능 덮어쓰기 가능
+  * 구현 방법
+    * 커스텀 레퍼지토리 인터페이스 정의
+    * 레퍼지토리 인터페이스를 구현하는 클래스 생성 (기본 접미어는 Impl)
+      * 클래스명 : 인터페이스명 + Impl
+    * 엔티티 레퍼지토리 인터페이스에 커스텀 레퍼지토리 인터페이스 상속 추가
+
+* 커스텀
+  * 원하는 기능(쿼리) 추가하기
+  * 기본 기능 덮어쓰기
+  * 접미어 설정하기
+    * @SpringBootApplication 어노테이션이 태깅된 JpaApplication 클래스에 아래 어노테이션으로 설정
+    * ``` @EnableJpaRepositories(repositoryImplementationPostfix = "default") ```
+    * 레퍼지토리 접미어가 일치하지 않으면 자체적으로 구현체를 생성하게 되어 직접 구현한 레퍼지토리에 기능을 사용할 수 없음
+
+* 공통 레퍼지토리
+  * 공통적인 기능 추가 또는 덮어쓸 기능 존재시
+  * 아래와 같은 방법으로 구현
+  * JpaRepository를 상속 받는 인터페이스 정의
+    * 공통 레퍼지토리에 @NoRepositoryBean 어노테이션 태깅
+    * 기본 구현체를 상속 받는 커스텀 구현체 만들기
+    * @EnableJpaRepositories에 repositoryBaseClass 속성 설정
+      * ``` @EnableJpaRepositories(repositoryBaseClass = SimpleMyCommonRepository.class) ```
+
+#### JPA 어노테이션
+* 엔티티 매핑 어노테이션
+  * @Entity
+    * 엔티티 클래스임을 지정
+  * @Table
+    * 엔티티가 매핑될 테이블을 지정
+    * 생략하면 엔티티 클래스명과 동일한 이름에 테이블과 매핑됨
+  * @Column
+    * 지정된 필드를 테이블 컬럼과 매핑
+    * 생략하면 필드명과 동일한 이름의 테이블 컬럼과 매핑됨
+
+* 엔티티 속성 매핑 어노테이션
+  * @Basic
+    * 테이블의 단순 타입 컬럼과 매핑됨
+    * 자바 원시 데이터 타입
+      * String, BigInteger, Date, byte[], char[], Character[], Serialize 인터페이스를 구현한 여러 타입
+    * fetch 속성
+      * EAGER(기본값), LAZY 값을 통해 로딩 시점 설정
+    * optional 속성
+      * 런타임 중 DB에 저장되기 전에 체크 되는 속성 
+      * boolean 타입으로 지정 가능
+    * @Column
+      * nullable 속성은 DB에 테이블 스키마가 만들어지는 시점에 속성에 Not Null 여부를 적용할지 판단
+  * @Enumerated
+    * 열거형 데이터를 매핑
+    * 열거형 값은 ordinal 이라는 인덱스 값과 연동됨
+  * @Lob
+    * DB의 CLOB, BLOB 데이터 타입과 매핑됨
+    * 속성 타입이 String, char[] 이면 CLOB, 그 외에는 BLOB과 매핑됨
+  * @Temporal
+    * 날짜 타입 필드(JPA 2.1 버전까지는 Date, Calendar)와 매핑됨
+  * @Transient
+    * DB 컬럼에 매핑되지 않는 필드 지정 (임시 또는 소스 로직상만 필요한 필드)
+    * 필드 또는 getter에 태깅
+  * @Access
+    * 프로퍼티 접근 방식 지정
+    * JPA 어노테이션은 필드와 getter에 태깅할 수 있지만 동시에 부여할 수 없고 한 쪽에만 태깅 가능
+    * 일반적으로 @Id 어노테이션을 기준으로 영속화 됨
+      * @Id 어노테이션을 필드에 붙이면 필드를 기준으로, getter에 붙이면 getter를 기준으로 영속화 됨
+    * AccessType.FIELD 경우 메서드를 거치지 않고 직접 필드를 읽어오기 때문에 메서드에 별도 로직이 존재하는 경우 동작하지 않음
+      * AccessType.PROPERTY
