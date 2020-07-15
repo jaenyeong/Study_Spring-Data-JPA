@@ -809,3 +809,20 @@ https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81-%EB%8D%B0%EC%9D%B4%E
        }
     }
     ```
+
+#### Spring Data Common 정리
+* 스프링 데이터 Repository
+* 쿼리 메소드
+  * 메소드명 보고 만들기
+  * 메소드명 보고 찾기
+* Repository 정의
+  * 내가 쓰고 싶은 메소드만 골라서 만들기
+  * Null 처리
+* 쿼리 메소드 정의하는 방법
+* 리포지토리 커스터마이징
+  * 리포지토리 하나 커스터마이징
+  * 모든 리포지토리의 베이스 커스터마이징
+* 도메인 이벤트 Publish
+* 스프링 데이터 확장 기능
+  * QueryDSL 연동
+  * 웹 지원
