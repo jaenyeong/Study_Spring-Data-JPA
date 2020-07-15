@@ -2,7 +2,6 @@ package com.jaenyeong;
 
 import com.jaenyeong.chapter_02_JPA.Jaenyeong.JaenyeongRegistrar;
 import com.jaenyeong.chapter_02_JPA.queryDSL.CustomRepositoryImpl;
-import com.jaenyeong.chapter_02_JPA.repository.SimpleMyCommonRepository;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Import;
