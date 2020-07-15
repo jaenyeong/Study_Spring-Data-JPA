@@ -893,3 +893,24 @@ https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81-%EB%8D%B0%EC%9D%B4%E
     * Sort는 그 안에서 사용한 프로퍼티 또는 alias가 엔티티에 없는 경우에 예외가 발생
     * JpaSort.unsafe()를 사용하면 함수 호출을 할 수 있음
       * ``` JpaSort.unsafe(“LENGTH(firstname)”); ```
+
+#### Named Parameter & SpEL
+* Named Parameter
+  * @Query에서 참조하는 매개변수를 이름으로 참조하는 방법 (:title와 같이)
+    * ```
+      Query("SELECT p FROM Post AS p WHERE p.title = :title")
+      List<Post> findByTitle(@Param("title") String title, Sort sort);
+      ```
+  * @Query에서 참조하는 매개변수를 채번으로 참조하는 방법 (?1, ?2와 같이)
+    * ```
+      @Query("SELECT p FROM Post AS p WHERE p.title = ?1")
+      List<Post> findByTitle(String title, Sort sort);
+      ```
+
+* SpEL (Spring Expression Language)
+  * 스프링 표현 언어
+  * @Query에서 엔티티 이름을 #{#entityName} 으로 표현 가능
+    * ```
+      @Query("SELECT p FROM #{#entityName} AS p WHERE p.title = :title")
+      List<Post> findByTitle(@Param("title") String title, Sort sort);
+      ```
