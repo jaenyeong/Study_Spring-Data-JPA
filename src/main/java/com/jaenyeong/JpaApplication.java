@@ -1,6 +1,7 @@
 package com.jaenyeong;
 
 import com.jaenyeong.chapter_02_JPA.Jaenyeong.JaenyeongRegistrar;
+import com.jaenyeong.chapter_02_JPA.queryDSL.CustomRepositoryImpl;
 import com.jaenyeong.chapter_02_JPA.repository.SimpleMyCommonRepository;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -22,6 +23,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 //@EnableJpaRepositories(repositoryImplementationPostfix = "default")
 // Common repository 생성시 @EnableJpaRepositories 어노테이션 repositoryBaseClass 속성에 설정
 @EnableJpaRepositories(repositoryBaseClass = SimpleMyCommonRepository.class)
+//@EnableJpaRepositories(repositoryBaseClass = CustomRepositoryImpl.class)
 public class JpaApplication {
 
 	public static void main(String[] args) {

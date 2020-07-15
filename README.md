@@ -578,3 +578,87 @@ https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81-%EB%8D%B0%EC%9D%B4%E
     * 누적된 이벤트를 비움
   * extends AbstractAggregateRoot<E>
   * 현재는 save() 할 때만 발생
+
+#### QueryDSL
+* QueryDSL
+  * 정적 타입을 이용해 타입 세이프한 쿼리 만들 수 있게 도와주는 라이브러리(프레임워크)
+  * JPA, SQL, MongoDB, JDO, Lucene, Collection 지원
+
+* 사용 이유
+  * 조건문을 표현하는 방법이 타입 세이프함(자바코드로 조건문 표현), 조건문 조합 가능
+
+* 일반적으로 대부분의 쿼리
+  * ``` Optional<T> findOne(Predicate) ```
+    * 특정 조건으로 무언가 하나를 찾음
+  * ``` List<T>|Page<T>|.. findAll(Predicate) ```
+    * 특정 조건으로 무언가 여러개를 찾음
+
+* gradle 설정
+  * 플러그인 추가
+    * ``` id 'com.ewerk.gradle.plugins.querydsl' version '1.0.10' ```
+  * 자동 생성된 dsl 클래스를 보관할 디렉토리 경로 선언(설정)
+    * ``` def querydslSrcDir = 'src/main/generated' ```
+  * queryDsl 설정
+    * ```
+      querydsl {
+          library = "com.querydsl:querydsl-apt"
+          jpa = true
+          querydslSourcesDir = querydslSrcDir
+      }
+      ```
+  * 프로젝트 소스 경로 설정에 위에서 선언한 디렉토리 추가
+    * ```
+      sourceSets {
+          main {
+              java {
+                  srcDirs = ['src/main/java', querydslSrcDir]
+              }
+          }
+      }
+      ```
+  * queryDsl 컴파일 설정
+    * ```
+      compileQuerydsl{
+          options.annotationProcessorPath = configurations.querydsl
+      }
+      
+      configurations {
+          querydsl.extendsFrom compileClasspath
+      }
+      ```
+  * 의존성 추가
+    * querydsl-apt : 코드를 생성해주는 모듈 (엔티티 모델에 맞는 쿼리용 도메인 특화 언어를 만들어줌)
+      * ``` implementation group: 'com.querydsl', name: 'querydsl-apt' ```
+    * querydsl-jpa : 도메인 특화 언어(domain specific language)
+    * ``` implementation group: 'com.querydsl', name: 'querydsl-jpa' ```
+  * 테스트 시 생성된 dsl을 찾지 못한다면 툴에서 dsl 파일 경로 설정 추가
+  * DSL 파일을 찾지 못하는 경우 gradle > other > compileQuerydsl 클릭
+
+* 스프링 데이터 JPA + QueryDSL
+  * 인터페이스: QuerydslPredicateExecutor<T>
+  * 구현체: QuerydslJpaRepository<T>
+
+* 연동방법
+  * 기본 레퍼지토리 사용
+    * 기본적으로 QuerydslJpaRepository를 사용
+      * QuerydslJpaRepository(현재 deprecated)가 SimpleJpaRepository를 상속하면서  
+        QuerydslPredicateExecutor 인터페이스를 구현하고 있음
+    * 레퍼지토리에서 QuerydslPredicateExecutor 인터페이스 상속
+      * ``` extends JpaRepository<T, ID>, QuerydslPredicateExecutor<T> ```
+    * 예제
+      * queryDSL 패키지 AccountRepository 클래스
+      * ```
+        public interface AccountRepository 
+                extends JpaRepository<Account, Long>, QuerydslPredicateExecutor<Account>
+        ```
+  * 커스터마이징 한 기본 레퍼지토리 사용
+    * QuerydslPredicateExecutor 구현체가 없는 경우 제대로 사용할 수 없음
+      * QuerydslJpaRepository(현재 deprecated)가 SimpleJpaRepository를 상속하면서  
+        QuerydslPredicateExecutor 인터페이스를 구현하고 있음
+    * 커스터마이징 한 기본 레퍼지토리가 SimpleJpaRepository가 아닌 QuerydslJpaRepository를 상속하도록 구현
+    * 예제
+      * repository 패키지 SimpleMyCommonRepository 클래스
+      * ```
+        public class SimpleMyCommonRepository<T, ID extends Serializable>
+        		extends QuerydslJpaRepository<T, ID> implements MyCommonRepository<T, ID>
+        ```

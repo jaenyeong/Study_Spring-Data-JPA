@@ -3,6 +3,8 @@ plugins {
     id 'io.spring.dependency-management' version '1.0.9.RELEASE'
     id 'java'
     id 'war'
+    id 'idea'
+    id 'com.ewerk.gradle.plugins.querydsl' version '1.0.10'
 }
 
 group 'com.jaenyeong'
@@ -11,6 +13,31 @@ sourceCompatibility = '11'
 
 repositories {
     jcenter()
+}
+
+def querydslSrcDir = 'src/main/generated'
+
+querydsl {
+    library = "com.querydsl:querydsl-apt"
+    jpa = true
+    querydslSourcesDir = querydslSrcDir
+//    querydslDefault = true
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src/main/java', querydslSrcDir]
+        }
+    }
+}
+
+compileQuerydsl{
+    options.annotationProcessorPath = configurations.querydsl
+}
+
+configurations {
+    querydsl.extendsFrom compileClasspath
 }
 
 dependencies {
@@ -27,6 +54,11 @@ dependencies {
     }
 
     testImplementation group: 'com.h2database', name: 'h2'
+
+    implementation group: 'com.querydsl', name: 'querydsl-apt'
+    implementation group: 'com.querydsl', name: 'querydsl-jpa'
+
+    compileOnly group: 'org.projectlombok', name: 'lombok'
 }
 
 test {
