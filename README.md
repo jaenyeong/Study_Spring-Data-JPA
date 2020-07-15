@@ -840,3 +840,24 @@ https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81-%EB%8D%B0%EC%9D%B4%E
   
 * 스프링 @Repository
   * SQLExcpetion 또는 JPA 관련 예외를 스프링의 DataAccessException으로 변환
+
+#### 엔티티 저장 (Save 메서드)
+* JpaRepository의 save 메서드
+  * save 메서드는 단순히 새 엔티티를 추가하는 메소드가 아님
+  * Transient 상태의 객체라면 EntityManager.persist()
+  * Detached 상태의 객체라면 EntityManager.merge()
+
+* Transient인지 Detached 인지 판단하는 방법
+  * 엔티티의 @Id 프로퍼티를 찾음
+  * 해당 id가 null이면 Transient 상태로 판단
+    * id가 null이 아니면 Detached 상태로 판단
+  * 엔티티가 Persistable 인터페이스를 구현하고 있다면 isNew() 메소드에 위임
+  * JpaRepositoryFactory를 상속받는 클래스를 만들고  
+    getEntityInformation()을 오버라이딩해서 자신이 원하는 판단 로직을 구현할 수도 있음
+
+* EntityManager
+  * EntityManager.persist()
+    * Persist() 메소드에 넘긴 그 엔티티 객체를 Persistent 상태로 변경
+  * EntityManager.Merge() 
+    * 메소드에 파라미터로 넘긴 그 엔티티의 복사본을 생성, 그 복사본을 다시 Persistent 상태로 변경(영속화)하고 그 복사본을 반환
+    * 실수를 줄이려면 파라미터로 전달한 인스턴스를 사용하지 말고 결과값으로 반환해주는 객체를 사용할 것
