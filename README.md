@@ -896,7 +896,7 @@ https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81-%EB%8D%B0%EC%9D%B4%E
 
 #### Named Parameter & SpEL
 * Named Parameter
-  * @Query에서 참조하는 매개변수를 이름으로 참조하는 방법 (:title와 같이)
+  * @Query에서 참조하는 매개변수를 이름으로 참조하는 방법 (:title과 같이)
     * ```
       Query("SELECT p FROM Post AS p WHERE p.title = :title")
       List<Post> findByTitle(@Param("title") String title, Sort sort);
@@ -914,3 +914,22 @@ https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81-%EB%8D%B0%EC%9D%B4%E
       @Query("SELECT p FROM #{#entityName} AS p WHERE p.title = :title")
       List<Post> findByTitle(@Param("title") String title, Sort sort);
       ```
+
+#### Update Query 메서드
+* 쿼리 생성
+  * find
+  * count
+  * delete
+ 
+* 엔티티(객체)를 persistence context 관리 중 상태의 변화를 감지하면 flush, 동기화 됨 (업데이트 쿼리가 전송)
+
+* Update 또는 Delete 쿼리 직접 정의
+  * @Modifying @Query
+    * ```
+      @Modifying(clearAutomatically = true, flushAutomatically = true)
+      @Query("UPDATE Post p SET p.title = ?2 WHERE p.id = ?1")
+      int updateTitle(Long id, String title);
+      ```
+    * clearAutomatically 속성은 업데이트 쿼리 호출 후 persistence context에 캐시를 clear
+    * flushAutomatically 속성은 쿼리 호출 전 persistence context에 캐시를 flush
+  * 권장하지 않는 방법

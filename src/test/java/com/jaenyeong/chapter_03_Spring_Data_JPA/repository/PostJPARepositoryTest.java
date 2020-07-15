@@ -12,6 +12,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -98,5 +99,28 @@ public class PostJPARepositoryTest {
 
 		List<PostJPA> findPosts3 = postJPARepository.findByTitle("Spring Data JPA", JpaSort.unsafe("LENGTH(title)"));
 		assertThat(findPosts3.size()).isEqualTo(1);
+	}
+
+	@Test
+	public void updateTitle() throws Exception {
+		PostJPA post = new PostJPA();
+		post.setTitle("Spring Data JPA");
+		PostJPA savePost = postJPARepository.save(post);
+
+//		int updateCount = postJPARepository.updateTitle("hibernate", savePost.getId());
+//		assertThat(updateCount).isEqualTo(1);
+
+		// 업데이트 쿼리는 데이터베이스에 값을 변경하는 쿼리만 호출, persistence context 캐시를 변경하진 않음
+		// 따라서 업데이트 쿼리는 전송 되지만 persistence context 캐시에 있는 값을 반환할 뿐
+		// 조회 쿼리를 전송하여 값을 가져오지 않기 때문에 findById 메서드 호출로 가져온 PostJPA의 title 값은 "Spring Data JPA" 반환
+		// @Modifying(clearAutomatically = true) 어노테이션으로 persistence context 캐시를 비워주면
+		// findById 메서드 호출 시 데이터 조회 쿼리를 통해 값을 가져옴
+//		Optional<PostJPA> byId = postJPARepository.findById(savePost.getId());
+//		assertThat(byId.get().getTitle()).isEqualTo("hibernate");
+
+		// 결론적으로 가급적 별도의 쿼리를 호출하지 말고 아래와 같이 persistence context 캐시를 이용한 처리를 권장
+		savePost.setTitle("스프링 데이터 JPA");
+		List<PostJPA> all = postJPARepository.findAll();
+		assertThat(all.get(0).getTitle()).isEqualTo("스프링 데이터 JPA");
 	}
 }
