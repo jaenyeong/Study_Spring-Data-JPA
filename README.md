@@ -861,3 +861,35 @@ https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81-%EB%8D%B0%EC%9D%B4%E
   * EntityManager.Merge() 
     * 메소드에 파라미터로 넘긴 그 엔티티의 복사본을 생성, 그 복사본을 다시 Persistent 상태로 변경(영속화)하고 그 복사본을 반환
     * 실수를 줄이려면 파라미터로 전달한 인스턴스를 사용하지 말고 결과값으로 반환해주는 객체를 사용할 것
+
+#### Query 메서드
+* 쿼리 생성
+  * And, Or
+  * Is, Equals
+  * LessThan, LessThanEqual, GreaterThan, GreaterThanEqual
+  * After, Before
+  * IsNull, IsNotNull, NotNull
+  * Like, NotLike
+  * StartingWith, EndingWith, Containing
+  * OrderBy
+  * Not, In, NotIn
+  * True, False
+  * IgnoreCase
+
+* 쿼리 찾아쓰기
+  * 엔티티에 정의한 쿼리를 찾아 사용 (JPA Named 쿼리)
+    * @NamedQuery
+      * JPQL
+    * @NamedNativeQuery
+      * Native query
+  * 레퍼지토리 메소드에 정의한 쿼리 사용
+    * @Query
+    * @Query(nativeQuery=true)
+
+* Sort
+  * @Query와 같이 사용할 때 제약 사항 존재
+    * Order by 절에서 함수를 호출하는 경우, Sort 호출 못함
+      * JpaSort.unsafe()를 사용해야 함
+    * Sort는 그 안에서 사용한 프로퍼티 또는 alias가 엔티티에 없는 경우에 예외가 발생
+    * JpaSort.unsafe()를 사용하면 함수 호출을 할 수 있음
+      * ``` JpaSort.unsafe(“LENGTH(firstname)”); ```

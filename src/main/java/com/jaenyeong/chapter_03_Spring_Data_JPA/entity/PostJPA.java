@@ -10,6 +10,8 @@ import java.util.Set;
 
 @Data
 @Entity
+// @NamedQuery 어노테이션은 엔티티에 태깅하여 사용 - JPQL
+//@NamedQuery(name = "PostJPA.findByTitle", query = "SELECT p FROM PostJPA AS p WHERE p.title = ?1")
 public class PostJPA {
 	@Id
 	@GeneratedValue

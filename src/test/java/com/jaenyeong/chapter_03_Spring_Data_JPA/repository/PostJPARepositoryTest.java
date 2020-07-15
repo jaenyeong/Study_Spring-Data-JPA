@@ -5,6 +5,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.JpaSort;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.persistence.EntityManager;
@@ -67,5 +69,34 @@ public class PostJPARepositoryTest {
 
 		List<PostJPA> all = postJPARepository.findAll();
 		assertThat(all.size()).isEqualTo(1);
+	}
+
+	@Test
+	public void findByTitleStartsWith() throws Exception {
+		PostJPA post = new PostJPA();
+		post.setTitle("Spring Data JPA");
+		postJPARepository.save(post);
+
+		List<PostJPA> findPosts = postJPARepository.findByTitleStartsWith("Spring");
+		assertThat(findPosts.size()).isEqualTo(1);
+	}
+
+	@Test
+	public void findByTitle() throws Exception {
+		PostJPA post = new PostJPA();
+		post.setTitle("Spring Data JPA");
+		postJPARepository.save(post);
+
+//		List<PostJPA> findPosts = postJPARepository.findByTitle("Spring Data JPA");
+
+		// Sort
+		List<PostJPA> findPosts1 = postJPARepository.findByTitle("Spring Data JPA", Sort.by("title"));
+		assertThat(findPosts1.size()).isEqualTo(1);
+
+		// 아래와 같은 함수는 수용하지 않음
+//		List<PostJPA> findPosts2 = postJPARepository.findByTitle("Spring Data JPA", Sort.by("LENGTH(title)"));
+
+		List<PostJPA> findPosts3 = postJPARepository.findByTitle("Spring Data JPA", JpaSort.unsafe("LENGTH(title)"));
+		assertThat(findPosts3.size()).isEqualTo(1);
 	}
 }
