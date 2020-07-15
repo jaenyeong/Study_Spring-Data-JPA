@@ -60,4 +60,26 @@ public class WebPostControllerTest {
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.content[0].title", is("JPA")));
 	}
+
+	@Test
+	public void getHateoasPosts() throws Exception {
+		createPosts100();
+
+		mockMvc.perform(
+				get("/posts/hateoas")
+						.param("page", "3")
+						.param("size", "10")
+						.param("sort", "created,desc")
+						.param("sort", "title"))
+				.andDo(print())
+				.andExpect(status().isOk());
+	}
+
+	private void createPosts100() {
+		for (int i = 0; i < 100; i++) {
+			WebPost webPost = new WebPost();
+			webPost.setTitle("JPA");
+			webPostRepository.save(webPost);
+		}
+	}
 }

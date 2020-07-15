@@ -4,6 +4,9 @@ import com.jaenyeong.chapter_02_JPA.webCommon.domainClassConverter.entity.WebPos
 import com.jaenyeong.chapter_02_JPA.webCommon.domainClassConverter.repository.WebPostRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.PagedResources;
+import org.springframework.hateoas.Resource;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -34,5 +37,13 @@ public class WebPostController {
 	@GetMapping("/posts/")
 	public Page<WebPost> getPosts(Pageable pageable) {
 		return posts.findAll(pageable);
+	}
+
+	// HATEOAS
+	@GetMapping("/posts/hateoas")
+	public PagedResources<Resource<WebPost>> getHateoasPosts(
+			Pageable pageable, PagedResourcesAssembler<WebPost> assembler) {
+
+		return assembler.toResource(posts.findAll(pageable));
 	}
 }

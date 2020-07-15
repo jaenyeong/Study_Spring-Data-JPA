@@ -708,3 +708,104 @@ https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81-%EB%8D%B0%EC%9D%B4%E
   * size: 기본값 20
   * sort: property,property(,ASC|DESC)
   * 예) sort=created,desc&sort=title (asc가 기본값)
+
+#### HATEOAS
+* Hypermedia As The Engine Of Application state
+  * RESTful API를 사용하는 클라이언트가 전적으로 서버와 동적인 상호작용이 가능하도록 하는 것
+    * 이러한 방법은 클라이언트가 서버로부터 어떠한 요청을 할 때  
+      요청에 필요한(의존되는) URI를 응답에 포함시켜 반환 하는 것으로 가능하게 할 수 있음
+  * REST API 단점을 보완함
+    * 엔드 포인트 URI(URL) 변경 시 모두 수정해야 하는 문제
+    * 현재 자원의 상태를 고려하지 않는 문제
+  * 장점
+    * 요청 URI가 변경되더라도 클라이언트에서 동적으로 생성된 URI를 사용함으로써  
+      클라이언트가 URI 수정에 따른 코드를 변경하지 않아도 되는 편리함을 제공
+    * URI 정보를 통해 들어오는 요청을 예측할 수 있게 됨
+    * Resource가 포함된 URI를 보여주기 때문에 Resource에 대한 확신을 얻을 수 있음
+    * 클라이언트를 개발하는 사람들이 특정 메소드로부터 올 수 있는 결과 동작에 대해 예측하는 것이 가능해지고  
+      API가 변경되더라도 키가 바뀌지 않는 한 URI로 주어진 링크(link)만 유지하면 되므로 별도의 대응이 요구되지 않게 됨
+
+* Page를 PagedResource로 변환
+  * 일단 HATEOAS 의존성 추가 (starter-hateoas)
+    * ``` implementation group: 'org.springframework.boot', name: 'spring-boot-starter-hateoas' ```
+  * 핸들러 매개변수로 PagedResourcesAssembler
+
+* 리소스 변환 전
+  * ```
+    {  
+       "content":[  
+    ...
+          {  
+             "id":111,
+             "title":"jpa",
+             "created":null
+          }
+       ],
+       "pageable":{  
+          "sort":{  
+             "sorted":true,
+             "unsorted":false
+          },
+          "offset":20,
+          "pageSize":10,
+          "pageNumber":2,
+          "unpaged":false,
+          "paged":true
+       },
+       "totalElements":200,
+       "totalPages":20,
+       "last":false,
+       "size":10,
+       "number":2,
+       "first":false,
+       "numberOfElements":10,
+       "sort":{  
+          "sorted":true,
+          "unsorted":false
+       }
+    }
+    ```
+
+* 리소스 변환 후
+  * ```
+    {  
+       "_embedded":{  
+          "postList":[  
+             {  
+                "id":140,
+                "title":"jpa",
+                "created":null
+             },
+    ...
+             {  
+                "id":109,
+                "title":"jpa",
+                "created":null
+             }
+          ]
+       },
+       "_links":{  
+          "first":{  
+             "href":"http://localhost/posts?page=0&size=10&sort=created,desc&sort=title,asc"
+          },
+          "prev":{  
+             "href":"http://localhost/posts?page=1&size=10&sort=created,desc&sort=title,asc"
+          },
+          "self":{  
+             "href":"http://localhost/posts?page=2&size=10&sort=created,desc&sort=title,asc"
+          },
+          "next":{  
+             "href":"http://localhost/posts?page=3&size=10&sort=created,desc&sort=title,asc"
+          },
+          "last":{  
+             "href":"http://localhost/posts?page=19&size=10&sort=created,desc&sort=title,asc"
+          }
+       },
+       "page":{  
+          "size":10,
+          "totalElements":200,
+          "totalPages":20,
+          "number":2
+       }
+    }
+    ```

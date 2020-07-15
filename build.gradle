@@ -63,6 +63,8 @@ dependencies {
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web'
 
     testImplementation group: 'org.hamcrest', name: 'hamcrest-core'
+
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-hateoas'
 }
 
 test {
