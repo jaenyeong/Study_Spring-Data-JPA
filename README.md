@@ -826,3 +826,17 @@ https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81-%EB%8D%B0%EC%9D%B4%E
 * 스프링 데이터 확장 기능
   * QueryDSL 연동
   * 웹 지원
+
+### Spring Data JPA
+
+#### Jpa Repository
+* @EnableJpaRepositories
+  * 스프링 부트 사용할 때는 자동 설정
+  * 스프링 부트 사용하지 않을 때는 @Configuration과 같이 사용
+  
+* @Repository
+  * 안붙여도 됨
+  * 태깅해도 동작하는데는 문제 없음
+  
+* 스프링 @Repository
+  * SQLExcpetion 또는 JPA 관련 예외를 스프링의 DataAccessException으로 변환
