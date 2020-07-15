@@ -662,3 +662,28 @@ https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81-%EB%8D%B0%EC%9D%B4%E
         public class SimpleMyCommonRepository<T, ID extends Serializable>
         		extends QuerydslJpaRepository<T, ID> implements MyCommonRepository<T, ID>
         ```
+
+### Spring Common Web
+
+#### 웹 지원 기능
+* 스프링 데이터 웹 지원 기능 설정
+  * 스프링 부트를 사용하는 경우 자동 설정
+  * 스프링 부트 사용하지 않는 경우
+    * ```
+      @Configuration
+      @EnableWebMvc
+      @EnableSpringDataWebSupport
+      class WebConfiguration {}
+      ```
+
+* 제공 기능
+  * 도메인 클래스 컨버터
+  * @RequestHandler 메소드에서 Pageable과 Sort 매개변수 사용 
+  * Page 관련 HATEOAS(Hypermedia As The Engine Of Application state) 기능 제공
+    * PagedResourcesAssembler
+    * PagedResoure
+  * Payload 프로젝션
+    * 요청으로 들어오는 데이터 중 일부만 바인딩 받아오기
+    * @ProjectedPayload, @XBRead, @JsonPath
+  * 요청 쿼리 매개변수를 QueryDSLdml Predicate로 받아오기
+    * ?firstname=Mr&lastname=White => Predicate
