@@ -12,8 +12,8 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.hamcrest.Matchers.is;
 
 // 모든 빈이 등록이되는 통합 테스트
 @RunWith(SpringRunner.class)
@@ -41,6 +41,23 @@ public class WebPostControllerTest {
 				get("/posts/" + webPost.getId()))
 				.andDo(print())
 				.andExpect(status().isOk())
-		.andExpect(content().string("JPA"));
+				.andExpect(content().string("JPA"));
+	}
+
+	@Test
+	public void getPosts() throws Exception {
+		WebPost webPost = new WebPost();
+		webPost.setTitle("JPA");
+		webPostRepository.save(webPost);
+
+		mockMvc.perform(
+				get("/posts/")
+						.param("page", "0")
+						.param("size", "10")
+						.param("sort", "created,desc")
+						.param("sort", "title"))
+				.andDo(print())
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.content[0].title", is("JPA")));
 	}
 }

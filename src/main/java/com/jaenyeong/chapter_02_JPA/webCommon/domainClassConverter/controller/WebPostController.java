@@ -2,6 +2,8 @@ package com.jaenyeong.chapter_02_JPA.webCommon.domainClassConverter.controller;
 
 import com.jaenyeong.chapter_02_JPA.webCommon.domainClassConverter.entity.WebPost;
 import com.jaenyeong.chapter_02_JPA.webCommon.domainClassConverter.repository.WebPostRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -9,10 +11,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class WebPostController {
 
-	private final WebPostRepository webPostRepository;
+	private final WebPostRepository posts;
 
-	public WebPostController(WebPostRepository webPostRepository) {
-		this.webPostRepository = webPostRepository;
+	public WebPostController(WebPostRepository posts) {
+		this.posts = posts;
 	}
 
 //	@GetMapping("/posts/{id}")
@@ -26,5 +28,11 @@ public class WebPostController {
 	@GetMapping("/posts/{id}")
 	public String getPost(@PathVariable("id") WebPost webPost) {
 		return webPost.getTitle();
+	}
+
+	// pageable, sort
+	@GetMapping("/posts/")
+	public Page<WebPost> getPosts(Pageable pageable) {
+		return posts.findAll(pageable);
 	}
 }

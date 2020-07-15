@@ -697,3 +697,14 @@ https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81-%EB%8D%B0%EC%9D%B4%E
   * application.properties(yaml) 파일에 있는 빈 목록들까지 사용하지 않는 경우
     * test 경로에 application-test.properties 파일을 생성하고 사용하는 빈 설정만 작성한 후
     * @ActiveProfiles("test") 어노테이션 태깅
+
+#### Pageable & Sort
+* 스프링 MVC HandlerMethodArgumentResolver
+
+* 스프링 MVC 핸들러 메소드의 매개변수로 받을 수 있는 객체를 확장하고 싶을 때 사용하는 인터페이스
+
+* 페이징과 정렬 관련 매개변수
+  * page: 0부터 시작
+  * size: 기본값 20
+  * sort: property,property(,ASC|DESC)
+  * 예) sort=created,desc&sort=title (asc가 기본값)
