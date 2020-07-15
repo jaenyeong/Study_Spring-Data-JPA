@@ -7,6 +7,7 @@ import javax.persistence.EntityManager;
 import java.io.Serializable;
 import java.util.List;
 
+@SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
 public class SimpleMyCommonRepository<T, ID extends Serializable>
 //		extends SimpleJpaRepository<T, ID>
 	// QuerydslJpaRepository 클래스 deprecated

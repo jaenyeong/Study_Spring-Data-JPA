@@ -10,6 +10,7 @@ import java.util.List;
 
 @NoRepositoryBean
 public interface CommonRepository<T, Id extends Serializable> extends Repository<T, Id> {
+
 	<E extends T> E save(@NonNull E entity);
 
 	List<T> findAll();

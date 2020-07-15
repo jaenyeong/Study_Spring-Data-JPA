@@ -248,7 +248,7 @@ https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81-%EB%8D%B0%EC%9D%B4%E
 
 * 예제
   * Post 객체에 ``` Set<Comment> comments ``` 필드에 cascade 옵션 적용
-    * ``` @OneToMany(mappedBy = "post", cascade = CascadeType.PERSIST) ```
+    * ``` @OneToMany(mappedBy = "webPost", cascade = CascadeType.PERSIST) ```
     * Post 객체에 comments 필드가 persistent 상태로 변경되어 데이터베이스에 저장됨
 
 #### Fetch
@@ -377,10 +377,10 @@ https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81-%EB%8D%B0%EC%9D%B4%E
 * 쿼리 만드는 방법
   * 리턴타입 {접두어}{도입부}By{프로퍼티 표현식}(조건식)[(And|Or){프로퍼티 표현식}(조건식)]{정렬 조건} (파라미터)
     * ```
-      Page<Comment> findByLikeGreaterThanAndPostOrderByCreatedDesc(int likeCount, Post post, Pageable pageable);
+      Page<Comment> findByLikeGreaterThanAndPostOrderByCreatedDesc(int likeCount, Post webPost, Pageable pageable);
       ```
     * ```
-      List<Comment> findByLikeGreaterThanAndPost(int likeCount, Post post, Sort sort);
+      List<Comment> findByLikeGreaterThanAndPost(int likeCount, Post webPost, Sort sort);
       ```
     * 리턴타입
       * E, Optional<E>, List<E>, Page<E>, Slice<E>, Stream<E>
@@ -687,3 +687,13 @@ https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81-%EB%8D%B0%EC%9D%B4%E
     * @ProjectedPayload, @XBRead, @JsonPath
   * 요청 쿼리 매개변수를 QueryDSLdml Predicate로 받아오기
     * ?firstname=Mr&lastname=White => Predicate
+
+#### DomainClassConverter
+* Spring Converter(Formatter-문자열기반)
+  * 예제에서는 데이터를 바인딩 받는 객체에 id 필드의 타입이 Long이기 때문에 Formatter가 아닌 Converter로 받게 됨
+
+* 테스트 설정
+  * @SpringBootTest 테스트는 Slicing test가 아닌 Integrated test이기 때문에 모든 빈이 등록되어 테스트 됨
+  * application.properties(yaml) 파일에 있는 빈 목록들까지 사용하지 않는 경우
+    * test 경로에 application-test.properties 파일을 생성하고 사용하는 빈 설정만 작성한 후
+    * @ActiveProfiles("test") 어노테이션 태깅

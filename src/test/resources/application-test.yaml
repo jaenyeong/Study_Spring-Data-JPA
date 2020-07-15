@@ -1,0 +1,23 @@
+#spring:
+#  datasource:
+#    url: jdbc:postgresql://localhost:5432/springdatajpa
+#    username: jaenyeong
+#    password: 1234
+#  jpa:
+#    hibernate:
+#      ddl-auto: update
+#    properties:
+#      hibernate:
+#        jdbc:
+#          lob:
+#            non_contextual_creation: true
+#        format_sql: true
+#    show-sql: true
+#
+#logging:
+#  level:
+#    org:
+#      hibernate:
+#        type:
+#          descriptor:
+#            sql: trace

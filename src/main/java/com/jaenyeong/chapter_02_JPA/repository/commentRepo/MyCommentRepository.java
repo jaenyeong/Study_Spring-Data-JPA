@@ -26,6 +26,7 @@ public interface MyCommentRepository extends CommonRepository<Comment, Long> {
 	// 비동기 쿼리
 	// @Async 어노테이션만으로는 비동기적으로 수행되지 않음
 	// 이 어노테이션은 백그라운드 스레드 풀에 해당 작업을 위임, 별도의 스레드에서 동작 시키는 것
+
 	@Async
 //	Future<List<Comment>> findByCommentContainsIgnoreCase(String keyword, Pageable pageable);
 	ListenableFuture<List<Comment>> findByCommentContainsIgnoreCase(String keyword, Pageable pageable);

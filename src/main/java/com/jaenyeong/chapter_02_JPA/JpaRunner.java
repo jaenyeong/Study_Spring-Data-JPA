@@ -29,8 +29,8 @@ public class JpaRunner implements ApplicationRunner {
 	@PersistenceContext
 	EntityManager entityManager;
 
-	@Autowired
-	JpaPostRepository postRepository;
+//	@Autowired
+//	JpaPostRepository postRepository;
 
 	@Autowired
 	Jaenyeong jaenyeong;
@@ -57,9 +57,8 @@ public class JpaRunner implements ApplicationRunner {
 	}
 
 	private void exampleJpaRepository() {
-		System.out.println("jaenyeong: " + jaenyeong);
-
-		postRepository.findAll().forEach(System.out::println);
+//		System.out.println("jaenyeong: " + jaenyeong);
+//		postRepository.findAll().forEach(System.out::println);
 	}
 
 	private void exampleNativeQuery() {
@@ -82,7 +81,7 @@ public class JpaRunner implements ApplicationRunner {
 
 		// DB에 독립적 > 벤더에 맞는 SQL이 실행됨
 		// 쿼리 오타 등으로 인해 타입 세이프하지 않음
-		TypedQuery<Post> query = entityManager.createQuery("SELECT p FROM Post AS p", Post.class);
+		TypedQuery<Post> query = entityManager.createQuery("SELECT p FROM WebPost AS p", Post.class);
 		List<Post> posts = query.getResultList();
 
 		posts.forEach(System.out::println);

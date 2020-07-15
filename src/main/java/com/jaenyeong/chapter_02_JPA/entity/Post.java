@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 //@NamedQueries({@NamedQuery(name = "all_post", query = "SELECT p FROM Post AS p")})
+
 @Entity
 //public class Post {
 // 도메인 이벤트 퍼블리싱을 위하여 상속

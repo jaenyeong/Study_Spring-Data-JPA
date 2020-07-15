@@ -1,15 +1,13 @@
 package com.jaenyeong.chapter_02_JPA.repository.postRepo;
 
 import com.jaenyeong.chapter_02_JPA.entity.Post;
-import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.transaction.Transactional;
 import java.util.List;
 
-@Repository
-@Transactional
+//@Repository
+//@Transactional
 // 예전에 사용하던 방식
 //public class PostRepository extends GenericRepository<Post, Long> {
 public class PostRepository {
@@ -29,6 +27,6 @@ public class PostRepository {
 	}
 
 	public List<Post> findAll() {
-		return entityManager.createQuery("SELECT p FROM Post as p", Post.class).getResultList();
+		return entityManager.createQuery("SELECT p FROM WebPost as p", Post.class).getResultList();
 	}
 }

@@ -11,6 +11,7 @@ import java.util.Set;
 // 데이터베이스의 예약어(키워드)로 잡혀 있는 단어를 클래스명으로 사용하지 않아야 함
 // 데이터베이스 syntax 에러 발생
 //@Entity(name = "myAccount")
+
 @Entity
 //@Table
 public class Account {
