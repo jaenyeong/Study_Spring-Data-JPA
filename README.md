@@ -980,3 +980,24 @@ https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81-%EB%8D%B0%EC%9D%B4%E
 * 다이나믹 프로젝션
   * 프로젝션 용 메소드 하나만 정의하고 실제 프로젝션 타입은 타입 인자로 전달
     * ``` <T> List<T> findByPost_Id(Long id, Class<T> type); ```
+
+#### Specifications
+* 에릭 에반스의 책 DDD에서 언급하는 Specification 개념을 차용 한 것으로 QueryDSL의 Predicate와 비슷
+* 특정 조건(스펙)을 미리 정의, 조합 및 사용하여 쿼리에 적용
+  * 예시 : 좋아요가 10개 이상인 코멘트 (And, Or 등 사용 가능)
+
+* 설정
+  * 의존성 설정
+    * ``` implementation group: 'org.hibernate', name: 'hibernate-jpamodelgen' ```
+  * 플러그인 설정
+    * 그레이들 플러그인 설정이 복잡하여 별도 설정 안함
+  * IDE에 애노테이션 처리기 설정
+    * 설정 > Build, Execution, Deployment > Compiler > Annotation Processors
+      * Enable annotation processing 체크박스 체크
+      * Annotation Prcessors / Prcessor FQ Name에 아래 내용 추가
+        * org.hibernate.jpamodelgen.JPAMetaModelEntityProcessor
+  * 소스 경로 설정
+    * 별다른 설정을 하지 않아 out/production/classes/generated 경로 밑에 파일이 생성됨
+    * 인텔리제이에 source 경로에 out/production/classes/generated 추가
+
+* QueryDSL, Lombok 설정 에러

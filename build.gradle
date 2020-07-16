@@ -1,3 +1,20 @@
+//buildscript {
+//    ext {
+//        springBootVersion = '2.1.2.RELEASE'
+//        querydslPluginVersion = '1.0.10'
+//    }
+//    repositories {
+//        mavenCentral()
+//        maven { url "https://plugins.gradle.org/m2/" } // plugin 저장소
+//    }
+//    dependencies {
+//        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+//        classpath "io.spring.gradle:dependency-management-plugin:1.0.9.RELEASE"
+//        classpath("gradle.plugin.com.ewerk.gradle.plugins:querydsl-plugin:${querydslPluginVersion}")
+//        classpath("gradle.plugin.at.comm_unity.gradle.plugins:jpamodelgen-plugin:1.1.4")
+//    }
+//}
+
 plugins {
     id 'org.springframework.boot' version '2.1.2.RELEASE'
     id 'io.spring.dependency-management' version '1.0.9.RELEASE'
@@ -5,6 +22,8 @@ plugins {
     id 'war'
     id 'idea'
     id 'com.ewerk.gradle.plugins.querydsl' version '1.0.10'
+//    id "at.comm_unity.gradle.plugins.jpamodelgen" version "1.1.4"
+//    id "io.franzbecker.gradle-lombok" version "1.14"
 }
 
 group 'com.jaenyeong'
@@ -20,8 +39,8 @@ def querydslSrcDir = 'src/main/generated'
 querydsl {
     library = "com.querydsl:querydsl-apt"
     jpa = true
+    querydslDefault = true
     querydslSourcesDir = querydslSrcDir
-//    querydslDefault = true
 }
 
 sourceSets {
@@ -32,12 +51,15 @@ sourceSets {
     }
 }
 
-compileQuerydsl{
-    options.annotationProcessorPath = configurations.querydsl
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+    querydsl.extendsFrom compileClasspath
 }
 
-configurations {
-    querydsl.extendsFrom compileClasspath
+compileQuerydsl {
+    options.annotationProcessorPath = configurations.querydsl
 }
 
 dependencies {
@@ -58,13 +80,23 @@ dependencies {
     implementation group: 'com.querydsl', name: 'querydsl-apt'
     implementation group: 'com.querydsl', name: 'querydsl-jpa'
 
-    compileOnly group: 'org.projectlombok', name: 'lombok'
+    // Lombok, QueryDSL 설정 충돌 문제로 사용안함
+//    implementation group: 'org.projectlombok', name: 'lombok'
+//    annotationProcessor 'org.projectlombok:lombok'
+//    compileOnly group: 'org.projectlombok', name: 'lombok'
+//    testCompileOnly group: 'org.projectlombok', name: 'lombok'
+//    testAnnotationProcessor("org.projectlombok:lombok")
 
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web'
 
     testImplementation group: 'org.hamcrest', name: 'hamcrest-core'
 
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-hateoas'
+
+    // compileOnly
+    implementation group: 'org.hibernate', name: 'hibernate-jpamodelgen'
+//    annotationProcessor('org.hibernate:hibernate-jpamodelgen')
+//    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
 }
 
 test {
