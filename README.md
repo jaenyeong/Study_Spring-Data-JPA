@@ -933,3 +933,27 @@ https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81-%EB%8D%B0%EC%9D%B4%E
     * clearAutomatically 속성은 업데이트 쿼리 호출 후 persistence context에 캐시를 clear
     * flushAutomatically 속성은 쿼리 호출 전 persistence context에 캐시를 flush
   * 권장하지 않는 방법
+
+#### EntityGraph
+* 쿼리 메소드마다 연관 관계의 Fetch 모드를 설정 가능
+
+* @NamedEntityGraph
+  * @Entity에서 재사용할 여러 엔티티 그룹을 정의할 때 사용
+  * 예제
+    * ``` @NamedEntityGraph(name = "CommentJPA.post", attributeNodes = @NamedAttributeNode("post")) ```
+* @EntityGraph
+  * @NamedEntityGraph에 정의되어 있는 엔티티 그룹을 사용함
+  * 그래프 타입 설정 가능
+    * FETCH(기본값) : 설정한 엔티티 애트리뷰트는 EAGER 패치 설정이 안된 나머지는 LAZY 패치
+      * 프리미티브 타입은 EAGER로 가져옴
+    * LOAD : 설정한 엔티티 애트리뷰트는 EAGER 패치 나머지는 기본 패치 전략 따름
+      * @OneToOne, @ManyToOne : EAGER
+      * @ManyToMany, @OneToMany : LAZY
+    * 예제
+      * ``` @EntityGraph(value = "CommentJPA.post", type = EntityGraph.EntityGraphType.FETCH) ```
+      * ``` @EntityGraph(value = "CommentJPA.post", type = EntityGraph.EntityGraphType.LOAD) ```
+
+* 엔티티에 @NamedEntityGraph 어노테이션을 태깅하지 않고  
+  레퍼지토리 쿼리에 @EntityGraph 어노테이션 태깅, attributePaths 속성 설정으로도 사용 가능
+  * 예제
+    * ``` @EntityGraph(attributePaths = {"post"}) ```
