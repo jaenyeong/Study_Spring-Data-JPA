@@ -5,6 +5,7 @@ import com.jaenyeong.chapter_02_JPA.queryDSL.CustomRepositoryImpl;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication
@@ -23,6 +24,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 // Common repository 생성시 @EnableJpaRepositories 어노테이션 repositoryBaseClass 속성에 설정
 //@EnableJpaRepositories(repositoryBaseClass = SimpleMyCommonRepository.class)
 @EnableJpaRepositories(repositoryBaseClass = CustomRepositoryImpl.class)
+// Auditing 사용을 위해 @EnableJpaAuditing 어노테이션 태깅
+@EnableJpaAuditing(auditorAwareRef = "accountAuditAware")
 public class JpaApplication {
 
 	public static void main(String[] args) {

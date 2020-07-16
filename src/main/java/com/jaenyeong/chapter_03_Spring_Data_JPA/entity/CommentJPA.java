@@ -1,11 +1,20 @@
 package com.jaenyeong.chapter_03_Spring_Data_JPA.entity;
 
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
 import javax.persistence.*;
+import java.util.Date;
 
 // @NamedEntityGraph 어노테이션 작성 없이 Repository에 @EntityGraph 어노테이션에 attributePaths 속성으로 설정 가능
 //@NamedEntityGraph(name = "CommentJPA.post", attributeNodes = @NamedAttributeNode("post"))
 //@Data
 @Entity
+// Auditing 사용을 위해 @EntityListeners 어노테이션 태깅
+@EntityListeners(AuditingEntityListener.class)
 public class CommentJPA {
 	@Id @GeneratedValue
 	private Long id;
@@ -19,6 +28,23 @@ public class CommentJPA {
 	private int up;
 	private int down;
 	private boolean best;
+
+	@CreatedDate
+	private Date created;
+	@LastModifiedDate
+	private Date updated;
+	@CreatedBy
+	@ManyToOne
+	private AccountAudit createdBy;
+	@LastModifiedBy
+	@ManyToOne
+	private AccountAudit updatedBy;
+
+	@PrePersist
+	public void prePersist() {
+		System.out.println("Pre Persist is called");
+//		this.created = new Date();
+	}
 
 	public Long getId() {
 		return id;

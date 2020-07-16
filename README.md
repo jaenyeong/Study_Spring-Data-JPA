@@ -1067,3 +1067,32 @@ https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81-%EB%8D%B0%EC%9D%B4%E
 
 * JPA 구현체로 Hibernate를 사용할 때 트랜잭션을 readOnly를 사용하면 좋은 점
   * Flush 모드를 NEVER로 설정하여, Dirty checking을 하지 않도록 함 (성능에 영향)
+
+#### Auditing
+* 엔티티의 변경 시점에 언제, 누가 변경했는지에 대한 정보를 기록하는 기능
+* 해당 기능은 스프링부트가 자동설정하지 않음
+  * @SpringBootApplication 태깅된 메인 어플리케이션 클래스에 @EnableJpaAuditing 태깅
+  * 엔티티 클래스 위에 @EntityListeners(AuditingEntityListener.class) 추가
+  * AuditorAware 구현체 생성
+  * @EnableJpaAuditing에 AuditorAware 빈 이름 설정
+
+* 예시
+  * ```
+    @CreatedDate
+    private Date created;
+
+    @LastModifiedDate
+    private Date updated;
+
+    @CreatedBy
+    @ManyToOne
+    private Account createdBy;
+
+    @LastModifiedBy
+    @ManyToOne
+    private Account updatedBy;
+    ```
+
+* JPA 라이프 사이클 이벤트
+  * @PrePersist
+  * @PreUpdate
