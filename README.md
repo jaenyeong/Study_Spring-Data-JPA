@@ -1001,3 +1001,22 @@ https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81-%EB%8D%B0%EC%9D%B4%E
     * 인텔리제이에 source 경로에 out/production/classes/generated 추가
 
 * QueryDSL, Lombok 설정 에러
+
+#### Query by Example
+* QBE(Query by Example)
+  * 필드명을 작성할 필요 없이(작성해야 함) 단순한 인터페이스를 통해 동적으로 쿼리를 만드는 기능을 제공하는 사용자 친화적인 쿼리 기술
+
+* Example = Probe + ExampleMatcher
+  * Probe는 필드에 어떤 값들을 가지고 있는 도메인 객체
+  * ExampleMatcher는 Prove에 들어있는 그 필드의 값들을 어떻게 쿼리할 데이터와 비교할지 정의한 것
+  * Example은 그 둘을 하나로 합친 것 이걸로 쿼리를 함
+
+* 장점
+  * 별다른 코드 생성기나 애노테이션 처리기 필요 없음
+  * 도메인 객체 리팩토링 해도 기존 쿼리가 깨질 걱정하지 않아도 됨
+  * 데이터 기술에 독립적인 API
+
+* 단점
+  * nested 또는 프로퍼티 그룹 제약 조건을 못 만듦
+  * 조건이 제한적
+  * 문자열은 starts/contains/ends/regex가 가능하고 그 밖에 property는 값이 정확히 일치해야 함
