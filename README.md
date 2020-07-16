@@ -957,3 +957,26 @@ https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81-%EB%8D%B0%EC%9D%B4%E
   레퍼지토리 쿼리에 @EntityGraph 어노테이션 태깅, attributePaths 속성 설정으로도 사용 가능
   * 예제
     * ``` @EntityGraph(attributePaths = {"post"}) ```
+
+#### Projection
+* 엔티티의 일부 데이터만 가져옴
+
+* 인터페이스 기반 프로젝션
+  * Nested 프로젝션 가능
+  * Closed 프로젝션
+    * 쿼리 최적화 가능
+      * 가져오려는 애트리뷰트를 알고 있기 때문
+    * Java 8의 디폴트 메서드를 사용해 연산 가능
+  * Open 프로젝션
+    * @Value(SpEL)을 사용해 연산 가능
+      * 스프링 빈의 메서드도 호출 가능
+    * 쿼리 최적화 불가능
+      * SpEL을 엔티티 대상으로 사용하기 때문
+
+* 클래스 기반 프로젝션
+  * DTO
+  * 롬복 @Value로 코드 줄일 수 있음
+
+* 다이나믹 프로젝션
+  * 프로젝션 용 메소드 하나만 정의하고 실제 프로젝션 타입은 타입 인자로 전달
+    * ``` <T> List<T> findByPost_Id(Long id, Class<T> type); ```

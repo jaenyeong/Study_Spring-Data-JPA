@@ -17,4 +17,8 @@ public class CommentJPA {
 //	@ManyToOne(fetch = FetchType.EAGER)
 	@ManyToOne(fetch = FetchType.LAZY)
 	private PostJPA post;
+
+	private int up;
+	private int down;
+	private boolean best;
 }
