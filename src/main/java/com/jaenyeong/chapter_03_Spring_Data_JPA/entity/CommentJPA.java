@@ -40,6 +40,11 @@ public class CommentJPA {
 	@ManyToOne
 	private AccountAudit updatedBy;
 
+	// ORDINAL 기본값이지만 운영상에 사용하지 않는 것을 추천
+	// 내부 ENUM 순서 변경시 문제가 될 수 있음
+	@Enumerated(value = EnumType.STRING)
+	private CommentStatus status;
+
 	@PrePersist
 	public void prePersist() {
 		System.out.println("Pre Persist is called");
