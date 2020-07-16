@@ -1020,3 +1020,50 @@ https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81-%EB%8D%B0%EC%9D%B4%E
   * nested 또는 프로퍼티 그룹 제약 조건을 못 만듦
   * 조건이 제한적
   * 문자열은 starts/contains/ends/regex가 가능하고 그 밖에 property는 값이 정확히 일치해야 함
+
+#### 트랜잭션
+* 스프링 데이터 JPA가 제공하는 Repository의 모든 메소드에는 기본적으로 @Transaction 어노테이션이 적용되어 있음
+
+* 스프링 @Transactional
+  * 클래스, 인터페이스, 메소드에 사용할 수 있음
+  * 메서드에 가장 가까운 애노테이션이 우선 순위가 높음
+  * Isolation (격리수준)
+    * 트랜잭션 격리수준 (여러 트랜잭션이 동일 데이터를 참조하려고 하는 경우) - 순서대로 고립수준과 성능
+      * Dirty READ : 커밋하지 않는 데이터를 읽는 것
+      * Phantom READ : 한 트랜잭션 내에서 같은 쿼리를 2번 실행했을 때 뒤늦게 실행된 쿼리에 없던 데이터 레코드가 조회되는 것
+      * READ UNCOMMITTED
+        * 모든 트랜잭션이 commit, rollback 상관없이 데이터를 참조
+          * Dirty read 현상 발생
+        * 성능은 가장 빠르나 데이터 정합성에 문제가 많음
+      * Read COMMITTED (오라클)
+        * 커밋된 데이터만 읽음, Dirty read가 일어나지 않게 보장
+        * 기본적으로 대부분 RDB에서 사용되고 있는 격리수준
+        * undo 된 영역에 백업 레코드에서 데이터 참조
+      * REPEATABLE READ (MySQL)
+        * 트랜잭션이 시작되기 전 커밋 데이터만 참조
+          * 트랜잭션마다 트랜잭션 ID를 부여, 트랜잭션 ID보다 작은 트랜잭션 번호에서 변경한 것만 읽게 됨
+        * undo 된 영역에 백업해두고 실제 레코드 값 변경
+          * 백업 데이터는 불필요하다고 판단되는 시점에 주기적으로 삭제처리
+      * Serializable
+        * 하나의 트랜잭션으로 처리하는 것과 동일, 성능이 가장 비효율적
+        * PHANTOM READ가 발생하지 않음
+        * 거의 사용되지 않음
+  * Propagation (전파)
+    * REQUIRED
+      * 부모 트랜잭션 내에서 실행하며 부모 트랜잭션이 없을 경우 새로운 트랜잭션을 생성
+    * REQUIRES_NEW
+      * 부모 트랜잭션을 무시하고 무조건 새로운 트랜잭션이 생성
+    * SUPPORT
+      * 부모 트랜잭션 내에서 실행하며 부모 트랜잭션이 없을 경우 nontransactionally로 실행
+    * MANDATORY
+      * 부모 트랜잭션 내에서 실행되며 부모 트랜잭션이 없을 경우 예외가 발생
+    * NOT_SUPPORT
+      * nontransactionally로 실행하며 부모 트랜잭션 내에서 실행될 경우 일시 정지
+    * NEVER
+      * nontransactionally로 실행되며 부모 트랜잭션이 존재한다면 예외가 발생
+    * NESTED
+      * 해당 메서드가 부모 트랜잭션에서 진행될 경우 별개로 커밋되거나 롤백될 수 있음
+      * 둘러싼 트랜잭션이 없을 경우 REQUIRED와 동일하게 작동
+
+* JPA 구현체로 Hibernate를 사용할 때 트랜잭션을 readOnly를 사용하면 좋은 점
+  * Flush 모드를 NEVER로 설정하여, Dirty checking을 하지 않도록 함 (성능에 영향)
