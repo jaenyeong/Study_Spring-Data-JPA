@@ -1,8 +1,6 @@
 package com.jaenyeong.chapter_03_Spring_Data_JPA.entity;
 
-import lombok.Data;
-
-@Data
+//@Data
 public class CommentJPASummaryClazz {
 	private String comment;
 	private int up;
@@ -16,5 +14,32 @@ public class CommentJPASummaryClazz {
 
 	public String getVotes() {
 		return this.up + " " + this.down;
+	}
+
+	public String getComment() {
+		return comment;
+	}
+
+	public CommentJPASummaryClazz setComment(String comment) {
+		this.comment = comment;
+		return this;
+	}
+
+	public int getUp() {
+		return up;
+	}
+
+	public CommentJPASummaryClazz setUp(int up) {
+		this.up = up;
+		return this;
+	}
+
+	public int getDown() {
+		return down;
+	}
+
+	public CommentJPASummaryClazz setDown(int down) {
+		this.down = down;
+		return this;
 	}
 }
